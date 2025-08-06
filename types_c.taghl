@@ -1,8 +1,8 @@
-syn keyword CTagsStructure s_list s_cmd s_array s_dblylst
-syn keyword CTagsMember target_pos c_array pos i_array target content moves j i path length prev env dirs args next pid
-syn keyword CTagsFunction ft_striteri ft_memcpy ft_clear ft_nlen ft_substr ft_lstsize ft_removeline ft_memchr ft_strlcpy ft_strmapi ft_printunsign_nbr ft_isprint ft_putnbr_fd ft_split ft_putendl_fd i_merge pipex_init ft_atoi ft_populate ft_strrchr get_pid ft_strlcat ft_found_newline ft_dblylst_size ft_free_matrix ft_printf main ft_putchar_fd ft_encrypt ft_isspace get_path_env ft_is_int ft_calloc ft_itoa ft_isdigit ft_strncmp ft_lstadd_front ft_isalnum ft_strnstr ft_printnbr ft_lstdelone ft_dblylst_last
-syn keyword CTagsFunction ft_lstlast ft_memmove ft_lstiter ft_isalpha ft_tolower get_path ft_dblylst_addback ft_memset ft_bzero ft_printchar ft_printarg ft_lstnew ft_issign ft_strcpy ft_printhex ft_strtrim ft_memcmp get_next_line populate_array ft_dblylst_new ft_strjoin ft_printadd join_command ft_printstr ft_strdup ft_writeline ft_strcmp ft_strchr ft_lstadd_back ft_strlen ft_atol ft_putstr_fd ft_lstmap ft_dblylst_clear i_merge_sort ft_readline ft_countwords calculate_length ft_isascii ft_toupper
-syn keyword CTagsFunction ft_lstclear
-syn keyword CTagsType t_array t_list t_bool t_cmd t_dblylst
-syn keyword CTagsDefinedName LIBFT_H BUFFER_SIZE PIPEX_H FALSE TRUE
+syn keyword CTagsStructure s_list s_dblylst s_array s_cmd
+syn keyword CTagsMember path target i pos args content moves env target_pos prev c_array dirs j i_array length pid next
+syn keyword CTagsFunction ft_toupper join_command ft_strjoin i_merge_sort ft_dblylst_last ft_isascii ft_lstiter ft_dblylst_new ft_nlen ft_atol ft_countwords ft_striteri ft_is_int ft_printnbr ft_writeline ft_dblylst_clear ft_strdup ft_strcpy ft_removeline calculate_length ft_isalnum ft_printstr ft_strncmp ft_strlcat ft_printarg ft_printchar ft_putstr_fd ft_substr ft_putnbr_fd ft_found_newline ft_printunsign_nbr ft_printadd ft_lstlast ft_strchr ft_split ft_bzero get_pid ft_strcmp ft_lstsize ft_memmove
+syn keyword CTagsFunction ft_encrypt ft_atoi ft_isdigit ft_printhex ft_putendl_fd ft_dblylst_size ft_strlen ft_isspace ft_strlcpy ft_strmapi ft_putchar_fd ft_isprint ft_memcmp ft_memcpy ft_printf get_path_env i_merge ft_memset ft_memchr ft_strtrim get_path ft_strrchr main ft_clear ft_lstclear ft_lstdelone get_next_line ft_lstnew ft_lstmap ft_dblylst_addback ft_populate ft_readline ft_lstadd_front ft_strnstr ft_tolower ft_issign pipex_init populate_array ft_calloc ft_isalpha ft_itoa ft_lstadd_back
+syn keyword CTagsFunction ft_free_matrix
+syn keyword CTagsType t_dblylst t_bool t_cmd t_array t_list
+syn keyword CTagsDefinedName LIBFT_H PIPEX_H BUFFER_SIZE TRUE FALSE
 
