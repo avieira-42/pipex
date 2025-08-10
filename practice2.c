@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/08/10 03:48:14 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/08/10 15:11:19 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,22 @@ void	get_path(char **dirs, char **path, char *cmd)
 {
 	int		i;
 	int		fd;
+	char	*tmp;
 
 	*path = NULL;
+	tmp = NULL;
 	i = 0;
 	while (dirs[i])
 	{
-		*path = join_command(dirs[i++], cmd);
-		if (access(*path, F_OK) == 0)
-			return ;
+		tmp = join_command(dirs[i++], cmd);
+		if (!tmp)
+			break ;
+		if (access(tmp, F_OK) == 0)
+		{
+			*path = tmp;
+			break ;
+		}
+		free(tmp);
 	}
 }
 
@@ -58,6 +66,7 @@ void	get_dirs(char **envp, char ***dirs)
 	int		i;
 	char	*path;
 
+	i = 0;
 	path = NULL;
 	while (envp[i])
 	{
@@ -69,22 +78,37 @@ void	get_dirs(char **envp, char ***dirs)
 		*dirs = ft_split(path, ':');
 }
 
-void	child_process(char **argv, char **envp, int *pipe_fd, int argc, char **dirs)
+void	child_process(char **argv, char **envp, int *pipe_fd, int argc,
+		char **dirs)
 {
 	char	*path;
 	char	**cmd_and_args;
 	int		wait_status;
 
 	cmd_and_args = ft_split(argv[1], ' ');
+	if (!cmd_and_args)
+	{
+		ft_free_matrix(dirs);
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+		exit(1);
+	}
 	printf ("%s\n", cmd_and_args[0]);
 	get_path(dirs, &path, cmd_and_args[0]);
+	ft_free_matrix(dirs);
 	if (!path)
-		exit(1);
+	{
+		ft_free_matrix(cmd_and_args);
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+		exit(2);
+	}
 	printf("%s\n", path);
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
 	execve(path, cmd_and_args, envp);
-	exit(2);
+	free(path);
+	exit(3);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -98,6 +122,7 @@ int	main(int argc, char **argv, char **envp)
 
 	//if (argc != 4)
 	//return (error_message("Usage: ./pipex infile cmd1 cm2 outfile", 1));
+	exit_code = 0;
 	get_dirs(envp, &dirs);
 	if (!dirs)
 		return (error_message("Failed to get path directories", 2));
@@ -108,17 +133,25 @@ int	main(int argc, char **argv, char **envp)
 	}
 	child_pid = fork();
 	if (child_pid == -1)
+	{
+		ft_free_matrix(dirs);
 		return (error_message("Failed to fork", 4));
+	}
 	if (child_pid == 0)
 		child_process(argv, envp, pipe_fd, argc, dirs);
 	wait_pid = waitpid(child_pid, &wait_status, 0);
 	if (WIFEXITED(wait_status));
-		exit_code = WEXITSTATUS(wait_status);
+	exit_code = WEXITSTATUS(wait_status);
 	if (exit_code == 1)
+	{
+		ft_free_matrix(dirs);
 		return (error_message("Failed to get cmd1 path", 5));
+	}
 	else if (exit_code == 2)
+	{
+		ft_free_matrix(dirs);
 		return (error_message("Failed to execute cmd1", 6));
-	else
-		ft_printf("Success");
-	return (0);
+	}
+	ft_free_matrix(dirs);
+	ft_printf("Success");
 }
