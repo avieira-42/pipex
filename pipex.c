@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/08/22 03:44:47 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/08/22 03:10:44 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ int	wait_child_process(pid_t child_pid, t_wait *wait, char ***dirs)
 		return (error_message("Cant find cmd1", -1, dirs));
 	else if (exit_code == 4)
 		return (error_message("Failed to open infile", -1, dirs));
-	return (0);
 }
 
 int	main(int argc, char **argv, char **envp)

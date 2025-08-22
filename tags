@@ -9,15 +9,15 @@ FALSE	libs/libft/include/libft.h	24;"	d
 LIBFT_H	libs/libft/include/libft.h	14;"	d
 PIPEX_H	includes/pipex.h	14;"	d
 TRUE	libs/libft/include/libft.h	23;"	d
-args	practice.c	/^	char	*args[2];$/;"	m	struct:s_cmd	file:
 c_array	libs/libft/include/libft.h	/^	char			*c_array;$/;"	m	struct:s_array
 calculate_length	libs/libft/srcs/ft_itoa.c	/^static int	calculate_length(int n)$/;"	f	file:
-child_process	practice2.c	/^void	child_process(char **argv, char **envp, int *pipe_fd, int argc)$/;"	f
+child_process	pipex.c	/^void	child_process(char **argv, char **envp, int *pipe_fd, char **dirs)$/;"	f
+child_process	srcs/pipex.c	/^void	child_process(char **argv, char **envp, int *pipe_fd, char **dirs)$/;"	f
+clean_contents	srcs/pipex_utils.c	/^void	clean_contents(char ***matrix, int *pipe_fd, int exit_code)$/;"	f
 content	libs/libft/include/libft.h	/^	void				*content;$/;"	m	struct:s_dblylst
 content	libs/libft/include/libft.h	/^	void			*content;$/;"	m	struct:s_list
-dirs	practice.c	/^	char	**dirs;$/;"	m	struct:s_cmd	file:
-env	practice.c	/^	char	**env;$/;"	m	struct:s_cmd	file:
-error_message	practice2.c	/^int	error_message(char *message, int error_code)$/;"	f
+error_message	srcs/pipex_utils.c	/^int	error_message(char *message, int error_code, char ***dirs)$/;"	f
+exit_code	includes/pipex.h	/^	int		exit_code;$/;"	m	struct:s_wait
 ft_atoi	libs/libft/srcs/ft_atoi.c	/^int	ft_atoi(const char *nptr)$/;"	f
 ft_atol	libs/libft/srcs/ft_atol.c	/^long int	ft_atol(char *nptr)$/;"	f
 ft_bzero	libs/libft/srcs/ft_bzero.c	/^void	ft_bzero(void *s, size_t n)$/;"	f
@@ -90,41 +90,36 @@ ft_substr	libs/libft/srcs/ft_substr.c	/^char	*ft_substr(char const *s, unsigned 
 ft_tolower	libs/libft/srcs/ft_tolower.c	/^int	ft_tolower(int c)$/;"	f
 ft_toupper	libs/libft/srcs/ft_toupper.c	/^int	ft_toupper(int c)$/;"	f
 ft_writeline	libs/libft/srcs/get_next_line.c	/^char	*ft_writeline(char *line, char *buf)$/;"	f
-get_dirs	practice2.c	/^void	get_dirs(char **envp, char ***dirs)$/;"	f
+get_dirs	srcs/pipex_utils.c	/^void	get_dirs(char **envp, char ***dirs)$/;"	f
 get_next_line	libs/libft/srcs/get_next_line.c	/^char	*get_next_line(int fd)$/;"	f
-get_path_env	practice.c	/^char	*get_path_env(char **envp)$/;"	f
-get_path	practice.c	/^char *get_path(char **dirs, char *cmd)$/;"	f
-get_path	practice2.c	/^void	get_path(char **dirs, char **path, char *cmd)$/;"	f
-get_pid	practice.c	/^int	get_pid(int *fd, t_cmd *cmd)$/;"	f
+get_path	srcs/pipex_utils.c	/^void	get_path(char **dirs, char **path, char *cmd)$/;"	f
 i_array	libs/libft/include/libft.h	/^	int				*i_array;$/;"	m	struct:s_array
 i_merge_sort	libs/libft/srcs/i_merge_sort.c	/^void	i_merge_sort(t_array middle)$/;"	f
 i_merge	libs/libft/srcs/i_merge_sort.c	/^void	i_merge(t_array left, t_array middle, t_array right)$/;"	f
-i	practice.c	/^	int		i;$/;"	m	struct:s_cmd	file:
-j	practice.c	/^	int		j;$/;"	m	struct:s_cmd	file:
-join_command	practice.c	/^char *join_command(char *dir, char *cmd) {$/;"	f
-join_command	practice2.c	/^char	*join_command(char *dir, char *cmd)$/;"	f
+join_command	srcs/pipex_utils.c	/^char	*join_command(char *dir, char *cmd)$/;"	f
 length	libs/libft/include/libft.h	/^	int				length;$/;"	m	struct:s_array
-main	piping.c	/^int main(int argc, char **argv, char **envp)$/;"	f
-main	practice.c	/^int main(int argc, char **argv, char **env)$/;"	f
-main	practice2.c	/^int	main(int argc, char **argv, char **envp)$/;"	f
-main	waitpid.c	/^int main(int argc, char *argv[])$/;"	f
+main	pipex.c	/^int	main(int argc, char **argv, char **envp)$/;"	f
+main	srcs/pipex.c	/^int	main(int argc, char **argv, char **envp)$/;"	f
 moves	libs/libft/include/libft.h	/^	int					moves;$/;"	m	struct:s_dblylst
 next	libs/libft/include/libft.h	/^	struct s_dblylst	*next;$/;"	m	struct:s_dblylst	typeref:struct:s_dblylst::s_dblylst
 next	libs/libft/include/libft.h	/^	struct s_list	*next;$/;"	m	struct:s_list	typeref:struct:s_list::s_list
-path	practice.c	/^	char	*path;$/;"	m	struct:s_cmd	file:
-pid	practice.c	/^	pid_t	pid;$/;"	m	struct:s_cmd	file:
-pipex_init	practice.c	/^int	pipex_init(t_cmd *cmd1, t_cmd *cmd2, char **argv, char **env)$/;"	f
+parent_process	pipex.c	/^void	parent_process(char **argv, char **envp, int *pipe_fd, char **dirs)$/;"	f
+parent_process	srcs/pipex.c	/^void	parent_process(char **argv, char **envp, int *pipe_fd, char **dirs)$/;"	f
+pid	includes/pipex.h	/^	pid_t	pid;$/;"	m	struct:s_wait
 populate_array	libs/libft/srcs/ft_itoa.c	/^static char	*populate_array(char *array, int i, int n)$/;"	f	file:
 pos	libs/libft/include/libft.h	/^	int					pos;$/;"	m	struct:s_dblylst
 prev	libs/libft/include/libft.h	/^	struct s_dblylst	*prev;$/;"	m	struct:s_dblylst	typeref:struct:s_dblylst::s_dblylst
 s_array	libs/libft/include/libft.h	/^typedef struct s_array$/;"	s
-s_cmd	practice.c	/^typedef struct s_cmd$/;"	s	file:
 s_dblylst	libs/libft/include/libft.h	/^typedef struct s_dblylst$/;"	s
 s_list	libs/libft/include/libft.h	/^typedef struct s_list$/;"	s
+s_wait	includes/pipex.h	/^typedef struct s_wait$/;"	s
+status	includes/pipex.h	/^	int		status;$/;"	m	struct:s_wait
 t_array	libs/libft/include/libft.h	/^}	t_array;$/;"	t	typeref:struct:s_array
 t_bool	libs/libft/include/libft.h	/^typedef int	t_bool;$/;"	t
-t_cmd	practice.c	/^}	t_cmd;$/;"	t	typeref:struct:s_cmd	file:
 t_dblylst	libs/libft/include/libft.h	/^}	t_dblylst;$/;"	t	typeref:struct:s_dblylst
 t_list	libs/libft/include/libft.h	/^}	t_list;$/;"	t	typeref:struct:s_list
+t_wait	includes/pipex.h	/^}	t_wait;$/;"	t	typeref:struct:s_wait
 target_pos	libs/libft/include/libft.h	/^	int					target_pos;$/;"	m	struct:s_dblylst
 target	libs/libft/include/libft.h	/^	struct s_dblylst	*target;$/;"	m	struct:s_dblylst	typeref:struct:s_dblylst::s_dblylst
+wait_child_process	pipex.c	/^int	wait_child_process(pid_t child_pid, t_wait *wait, char ***dirs)$/;"	f
+wait_child_process	srcs/pipex.c	/^int	wait_child_process(pid_t child_pid, t_wait *wait, char ***dirs)$/;"	f
