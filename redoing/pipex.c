@@ -6,7 +6,7 @@
 /*   By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 16:57:47 by avieira-          #+#    #+#             */
-/*   Updated: 2025/09/01 19:45:12 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/02 08:15:04 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,10 @@ void	process_parent(char **argv, char **envp, int *fd_pipe, char **cmd_dirs)
 	char	*path;
 	char	**cmd_and_args;
 
-	fd = open(argv[4], O_WRONLY);
+	fd = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (fd == -1)
 		exit(1);
-	cmd_and_args = ft_split(argv[2], ' ');
+	cmd_and_args = ft_split(argv[3], ' ');
 	if (!cmd_and_args)
 		exit(2);
 	path = path_get(cmd_and_args[0], cmd_dirs);
@@ -74,7 +74,10 @@ void	process_parent(char **argv, char **envp, int *fd_pipe, char **cmd_dirs)
 	}
 	dup2(fd_pipe[0], STDIN_FILENO);
 	dup2(fd, STDOUT_FILENO);
+	close(fd_pipe[1]);
 	execve(path, cmd_and_args, envp);
+	ft_free_matrix(cmd_and_args);
+	free(path);
 }
 
 void	process_child(char **argv, char **envp, int *fd_pipe, char **cmd_dirs)
@@ -83,7 +86,7 @@ void	process_child(char **argv, char **envp, int *fd_pipe, char **cmd_dirs)
 	char	*path;
 	char	**cmd_and_args;
 
-	fd = open(argv[1], O_RDONLY);
+	fd = open(argv[1], O_RDONLY, 0777);
 	if (fd == -1)
 		exit(1);
 	cmd_and_args = ft_split(argv[2], ' ');
@@ -97,7 +100,10 @@ void	process_child(char **argv, char **envp, int *fd_pipe, char **cmd_dirs)
 	}
 	dup2(fd_pipe[1], STDOUT_FILENO);
 	dup2(fd, STDIN_FILENO);
+	close(fd_pipe[0]);
 	execve(path, cmd_and_args, envp);
+	ft_free_matrix(cmd_and_args);
+	free(path);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -118,6 +124,5 @@ int	main(int argc, char **argv, char **envp)
 		return (4);
 	if (pid == 0)
 		process_child(argv, envp, fd_pipe, cmd_dirs);
-	waitpid(child_pid, 
 	process_parent(argv, envp, fd_pipe, cmd_dirs);
 }
