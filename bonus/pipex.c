@@ -6,7 +6,7 @@
 /*   By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 16:57:47 by avieira-          #+#    #+#             */
-/*   Updated: 2025/09/02 08:15:04 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/02 09:25:31 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,15 @@ void	process_parent(char **argv, char **envp, int *fd_pipe, char **cmd_dirs)
 
 	fd = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (fd == -1)
+	{
+		ft_free_matrix(cmd_dirs);
 		exit(1);
+	}
 	cmd_and_args = ft_split(argv[3], ' ');
 	if (!cmd_and_args)
 		exit(2);
 	path = path_get(cmd_and_args[0], cmd_dirs);
+	ft_free_matrix(cmd_dirs);
 	if (!path)
 	{
 		ft_free_matrix(cmd_and_args);
@@ -88,11 +92,18 @@ void	process_child(char **argv, char **envp, int *fd_pipe, char **cmd_dirs)
 
 	fd = open(argv[1], O_RDONLY, 0777);
 	if (fd == -1)
+	{
+		ft_free_matrix(cmd_dirs);
 		exit(1);
+	}
 	cmd_and_args = ft_split(argv[2], ' ');
 	if (!cmd_and_args)
+	{
 		exit(2);
+		ft_free_matrix(cmd_dirs);
+	}
 	path = path_get(cmd_and_args[0], cmd_dirs);
+	ft_free_matrix(cmd_dirs);
 	if (!path)
 	{
 		ft_free_matrix(cmd_and_args);
@@ -112,7 +123,7 @@ int	main(int argc, char **argv, char **envp)
 	char	**cmd_dirs;
 	pid_t	pid;
 
-	if (argc != 5)
+	if (argc < 5 || !(argc % 2))
 		return (1);
 	if (pipe(fd_pipe) == -1)
 		return (2);
@@ -121,8 +132,12 @@ int	main(int argc, char **argv, char **envp)
 		return (3);
 	pid = fork();
 	if (pid == -1)
+	{
+		ft_free_matrix(cmd_dirs);
 		return (4);
+	}
 	if (pid == 0)
 		process_child(argv, envp, fd_pipe, cmd_dirs);
+	waitpid(pid, NULL, 0);
 	process_parent(argv, envp, fd_pipe, cmd_dirs);
 }
