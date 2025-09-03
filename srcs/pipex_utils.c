@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/08/22 03:45:06 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/03 15:56:53 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ void	get_dirs(char **envp, char ***dirs)
 
 void	clean_contents(char ***matrix, int *pipe_fd, int exit_code)
 {
-	ft_free_matrix(*matrix);
+	if (*matrix)
+		ft_free_matrix(*matrix);
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
 	exit(exit_code);

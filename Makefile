@@ -6,12 +6,12 @@
 #    By: a-soeiro <marvavieira-@student.42porto.com +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/22 01:45:12 by a-soeiro          #+#    #+#              #
-#    Updated: 2025/08/22 03:48:18 by a-soeiro         ###   ########.fr        #
+#    Updated: 2025/09/03 14:15:02 by a-soeiro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME= pipex
-CC= cc
+CC= cc -g
 CFLAGS= -Wall -Wextra -Werror
 INCLUDES= ./includes
 LIBFT_DIR= ./libs/libft
@@ -19,6 +19,8 @@ LIBFT= $(LIBFT_DIR)/libft.a
 SRCS_DIR= ./srcs
 SRCS= $(SRCS_DIR)/pipex.c \
 $(SRCS_DIR)/pipex_utils.c
+
+all: $(LIBFT) $(NAME)
 
 $(NAME): $(LIBFT)
 	$(CC) $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME)

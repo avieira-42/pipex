@@ -6,11 +6,18 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/08/22 03:44:47 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/03 16:15:16 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
+
+int	close_pipe_fd(int *pipe_fd)
+{
+	close(pipe_fd[0]);
+	close(pipe_fd[1]);
+	return (-1);
+}
 
 void	child_process(char **argv, char **envp, int *pipe_fd, char **dirs)
 {
@@ -21,7 +28,7 @@ void	child_process(char **argv, char **envp, int *pipe_fd, char **dirs)
 	path = NULL;
 	fd = open(argv[1], O_RDONLY, 0777);
 	if (fd == -1)
-		exit(1);
+		clean_contents(&dirs, pipe_fd, 1);
 	cmd_and_args = ft_split(argv[2], ' ');
 	if (!cmd_and_args)
 		clean_contents(&dirs, pipe_fd, 2);
@@ -31,7 +38,8 @@ void	child_process(char **argv, char **envp, int *pipe_fd, char **dirs)
 		clean_contents(&cmd_and_args, pipe_fd, 3);
 	dup2(pipe_fd[1], STDOUT_FILENO);
 	dup2(fd, STDIN_FILENO);
-	close(pipe_fd[0]);
+	close_pipe_fd(pipe_fd);
+	close(fd);
 	execve(path, cmd_and_args, envp);
 	free(path);
 	exit(4);
@@ -56,7 +64,8 @@ void	parent_process(char **argv, char **envp, int *pipe_fd, char **dirs)
 		clean_contents(&cmd_and_args, pipe_fd, 3);
 	dup2(pipe_fd[0], STDIN_FILENO);
 	dup2(fd, STDOUT_FILENO);
-	close(pipe_fd[1]);
+	close_pipe_fd(pipe_fd);
+	close(fd);
 	execve(path, cmd_and_args, envp);
 	free(path);
 	exit(4);
@@ -103,7 +112,7 @@ int	main(int argc, char **argv, char **envp)
 	if (child_pid == 0)
 		child_process(argv, envp, pipe_fd, dirs);
 	if (wait_child_process(child_pid, &wait, &dirs) == -1)
-		return (-1);
+		return (close_pipe_fd(pipe_fd));
 	parent_process(argv, envp, pipe_fd, dirs);
 	ft_free_matrix(dirs);
 	ft_printf("Success");
