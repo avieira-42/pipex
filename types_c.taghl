@@ -1,8 +1,0 @@
-syn keyword CTagsStructure s_array s_list s_dblylst s_wait
-syn keyword CTagsMember c_array target content status target_pos length moves exit_code pos i_array next prev pid
-syn keyword CTagsFunction ft_printadd ft_strnstr ft_putchar_fd get_next_line ft_atoi ft_lstdelone ft_memcpy ft_memchr ft_lstiter ft_dblylst_addback ft_strrchr ft_dblylst_new ft_writeline ft_isalnum ft_printf ft_printarg ft_strcpy ft_populate ft_is_int ft_found_newline ft_strlcpy ft_calloc ft_dblylst_last ft_printnbr ft_dblylst_size ft_strcmp ft_lstadd_back ft_strlen ft_lstmap ft_lstclear ft_isdigit ft_printstr ft_removeline ft_printunsign_nbr ft_dblylst_clear wait_child_process ft_memmove populate_array
-syn keyword CTagsFunction i_merge_sort ft_readline ft_isspace ft_encrypt ft_substr ft_toupper ft_lstsize child_process ft_strjoin error_message ft_lstadd_front ft_countwords ft_free_matrix ft_isascii calculate_length ft_isprint ft_issign ft_putstr_fd ft_putendl_fd ft_strdup ft_nlen get_path ft_strmapi ft_printchar ft_lstnew ft_itoa ft_atol main ft_strncmp ft_bzero ft_memcmp ft_putnbr_fd ft_split ft_striteri ft_strtrim i_merge ft_isalpha ft_strlcat get_dirs ft_tolower ft_strchr join_command parent_process
-syn keyword CTagsFunction ft_printhex ft_lstlast ft_memset ft_clear clean_contents
-syn keyword CTagsType t_wait t_list t_array t_bool t_dblylst
-syn keyword CTagsDefinedName LIBFT_H TRUE FALSE PIPEX_H BUFFER_SIZE
-
