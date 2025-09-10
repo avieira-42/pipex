@@ -6,7 +6,7 @@
 /*   By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 19:40:52 by avieira-          #+#    #+#             */
-/*   Updated: 2025/09/09 22:43:52 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/10 14:53:32 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,7 @@ size_t		ft_strlen(const char *s);
 			return (TRUE);
 		return (FALSE);
 	}
+*/
 
 /* FILE DESCRIPTING */
 
