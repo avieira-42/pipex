@@ -6,16 +6,26 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/09 18:23:49 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/10 20:46:57 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
 
-int	error_message(char *message, int error_code, char ***dirs)
+void	exit_error_message(char *message, int error_code, char **dirs)
 {
-	if (*dirs)
-		ft_free_matrix(*dirs);
+	if (dirs)
+		ft_free_matrix(dirs);
+	ft_putstr_fd("Error\n", 2);
+	ft_putstr_fd(message, 2);
+	ft_putstr_fd("\n", 2);
+	exit(error_code);
+}
+
+int	return_error_message(char *message, int error_code, char **dirs)
+{
+	if (dirs)
+		ft_free_matrix(dirs);
 	ft_putstr_fd("Error\n", 2);
 	ft_putstr_fd(message, 2);
 	ft_putstr_fd("\n", 2);
@@ -58,27 +68,31 @@ void	get_path(char **dirs, char **path, char *cmd)
 	}
 }
 
-void	get_dirs(char **envp, char ***dirs)
+char	**get_dirs(char **envp)
 {
 	int		i;
 	char	*path;
+	char	**dirs;
 
 	i = 0;
 	path = NULL;
+	dirs = NULL;
 	while (envp[i])
 	{
 		if (ft_strncmp(envp[i], "PATH", 4) == 0)
 			path = envp[i] + 5;
 		i++;
 	}
-	if (path)
-		*dirs = ft_split(path, ':');
+	dirs = ft_split(path, ':');
+	if (dirs == NULL)
+		exit_error_message("Failed to get path directories", -1, dirs);
+	return (dirs);
 }
 
-void	clean_contents(char ***matrix, int *pipe_fd, int exit_code)
+void	clean_contents(char **matrix, int *pipe_fd, int exit_code)
 {
-	if (*matrix)
-		ft_free_matrix(*matrix);
+	if (matrix)
+		ft_free_matrix(matrix);
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
 	exit(exit_code);
