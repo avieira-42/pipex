@@ -6,7 +6,7 @@
 /*   By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 19:40:52 by avieira-          #+#    #+#             */
-/*   Updated: 2025/09/10 14:53:32 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/12 02:31:40 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,15 +122,7 @@ char		*ft_strchr(const char *s, int c);
 char		*ft_strrchr(const char *s, int c);
 char		*ft_strnstr(const char *big, const char *little, size_t len);
 size_t		ft_strlen(const char *s);
-/* BOOL STRCMP t_bool		ft_bool_strcmp(char *str1, char *str2);
- *
- 	t_bool		ft_bool_strcmp(char *str1, char *str2)
- 	{
-		if (ft_strcmp(str1, str2) == 0)
-			return (TRUE);
-		return (FALSE);
-	}
-*/
+t_bool		ft_bool_strcmp(char *string_1, char *string_2);
 
 /* FILE DESCRIPTING */
 

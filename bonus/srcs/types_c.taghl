@@ -1,0 +1,2 @@
+syn keyword CTagsFunction middle_child_process pipe_list_create get_dirs main exit_error_message close_pipe_fd get_path handle_here_doc loop_middle_child pipe_commands wait_child_process return_error_message final_child_process join_command clean_contents parse_args first_child_process
+
