@@ -1,12 +1,11 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_bonus.h                                      :+:      :+:    :+:   */
+/*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
+/*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */ /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 03:08:38 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/09 22:55:14 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/10 16:58:42 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +26,25 @@ typedef struct s_wait
 	pid_t	pid;
 }	t_wait;
 
-int		error_message(char *message, int error_code, char ***dirs);
+typedef struct s_pipe
+{
+	int				fd[2];
+	int				return_value;
+	struct s_pipe	*next;
+}	t_pipe;
+
+typedef struct s_cmdlinearg
+{
+	int		argc;
+	char	**argv;
+	char	**envp;
+}	t_cmd_line_arg;
+
 char	*join_command(char *dir, char *cmd);
+char	**get_dirs(char **envp);
 void	get_path(char **dirs, char **path, char *cmd);
-void	get_dirs(char **envp, char ***dirs);
-void	clean_contents(char ***matrix, int *pipe_fd, int exit_code);
+void	clean_contents(char **matrix, int *pipe_fd, int exit_code);
+void	exit_error_message(char *message, int error_code, char **dirs);
+int		return_error_message(char *message, int error_code, char **dirs);
 
 #endif
