@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 02:51:49 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/14 19:28:01 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/14 23:41:38 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	pipe_list_free(t_pipe *list)
 	{
 		tmp = list->next;
 		if (list->is_closed == FALSE)
-			close_pipe_fd(list->fd);
+			close_pipe_fd(list);
 		free(list);
 		list = tmp;
 	}
@@ -44,7 +44,7 @@ void	pipe_list_free(t_pipe *list)
 
 t_pipe	*pipe_list_last(t_pipe *pipe_list)
 {
-	t_pipe	*firs;
+	t_pipe	*first;
 	t_pipe	*last;
 
 	first = pipe_list;
@@ -60,8 +60,8 @@ t_pipe	*pipe_list_last(t_pipe *pipe_list)
 
 void	pipe_list_add_back(t_pipe *pipe_list, t_pipe *pipe_new)
 {
-	pipe_list = pipe_list_last(pipe_list);
 	pipe_new->next = pipe_list;
+	pipe_list = pipe_list_last(pipe_list);
 	pipe_list->next = pipe_new;
 }
 
@@ -70,7 +70,6 @@ t_pipe	*pipe_list_create(int argc)
 	int		n;
 	t_pipe	*pipe_list;
 	t_pipe	*pipe_node_new;
-	t_pipe	*pipe_iterator;
 
 	pipe_list = NULL;
 	n = 0;
@@ -80,7 +79,10 @@ t_pipe	*pipe_list_create(int argc)
 		if (pipe_node_new->return_value == -1)
 			pipe_list_free(pipe_list);
 		if (pipe_list == NULL)
+		{
 			pipe_list = pipe_node_new;
+			pipe_list->next = pipe_list;
+		}
 		else
 			pipe_list_add_back(pipe_list, pipe_node_new);
 		n++;

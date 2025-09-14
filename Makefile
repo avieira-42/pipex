@@ -6,7 +6,7 @@
 #    By: a-soeiro <marvavieira-@student.42porto.com +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/22 01:45:12 by a-soeiro          #+#    #+#              #
-#    Updated: 2025/09/14 15:15:39 by a-soeiro         ###   ########.fr        #
+#    Updated: 2025/09/14 23:25:13 by a-soeiro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ B_SRCS= $(B_SRCS_DIR)/pipex_bonus.c \
 $(B_SRCS_DIR)/pipex_utils_bonus.c \
 $(B_SRCS_DIR)/pipe_init_bonus.c \
 $(B_SRCS_DIR)/pipe_list_bonus.c \
-$(B_SRCS_DIR)/pipe_clering_bonus.c
+$(B_SRCS_DIR)/pipe_clearing_bonus.c
 
 all: $(LIBFT) $(NAME)
 

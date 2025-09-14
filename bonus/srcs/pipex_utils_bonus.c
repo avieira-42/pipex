@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/14 14:38:26 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/14 23:19:06 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,6 @@ char	**get_dirs(char **envp)
 	}
 	dirs = ft_split(path, ':');
 	if (dirs == NULL)
-		exit_error_message("Failed to get path directories", -1, dirs);
+		exit_error_message("Failed to get path directories", -1, dirs, NULL);
 	return (dirs);
 }

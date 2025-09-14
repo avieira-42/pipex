@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/14 19:32:54 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/14 23:59:52 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,14 @@ void	final_chld_proc(char **argv, char **envp, t_pipe *pipe_lst, char **dirs)
 		exit(1);
 	cmd_and_args = ft_split(*argv, ' ');
 	if (!cmd_and_args)
-		clean_contents(dirs, pipe_lst->fd, 2);
+		clean_contents(dirs, pipe_lst, 2);
 	get_path(dirs, &path, cmd_and_args[0]);
 	ft_free_matrix(dirs);
 	if (!path)
-		clean_contents(cmd_and_args, pipe_lst->fd, 3);
+		clean_contents(cmd_and_args, pipe_lst, 3);
 	dup2(pipe_lst->fd[0], STDIN_FILENO);
 	dup2(fd, STDOUT_FILENO);
-	close_pipe_fd(pipe_lst->fd);
+	close_pipe_fd(pipe_lst);
 	close(fd);
 	execve(path, cmd_and_args, envp);
 	free(path);
@@ -94,14 +94,14 @@ void	mid_chld_process(char *argv, char **envp, t_pipe *pipe_lst, char **dirs)
 	if (!cmd_and_args)
 	{
 		close_pipe_fd(pipe_lst); //	 MAYBE
-		clean_contents(dirs, pipe_lst->next->fd, 2); // UPDATE
+		clean_contents(dirs, pipe_lst->next, 2); // UPDATE
 	}
 	get_path(dirs, &path, cmd_and_args[0]);
 	ft_free_matrix(dirs);
 	if (!path)
 	{
 		close_pipe_fd(pipe_lst); // CLEAN
-		clean_contents(cmd_and_args, pipe_lst->next->fd, 2); // CONTENTS
+		clean_contents(cmd_and_args, pipe_lst->next, 2); // CONTENTS
 	}
 	dup2(pipe_lst->fd[0], STDIN_FILENO);
 	dup2(pipe_lst->next->fd[1], STDOUT_FILENO);
@@ -111,7 +111,7 @@ void	mid_chld_process(char *argv, char **envp, t_pipe *pipe_lst, char **dirs)
 	free(path);
 }
 
-void	loop_middle_child(t_cmdlinearg param, t_pipe *pipe_list, char **dirs)
+void	loop_middle_child(t_shellarg param, t_pipe *pipe_list, char **dirs)
 {
 	int		n;
 	pid_t	child_pid_middle;
@@ -126,33 +126,33 @@ void	loop_middle_child(t_cmdlinearg param, t_pipe *pipe_list, char **dirs)
 			mid_chld_process(param.argv[n + 4], param.envp, pipe_list, dirs);
 		close_pipe_fd(pipe_list);
 		if (wait_child_process(child_pid_middle) != 0)
-			exit_error_message("Failed to fork first process", -1, dirs);
+			exit_error_message("Failed to fork first process", -1, dirs, pipe_list);
 		pipe_list = pipe_list->next;
 	}
 }
 
-void	pipe_commands(t_cmdlinearg param, t_pipe *pipe_list, char **dirs)
+void	pipe_commands(t_shellarg param, t_pipe *pipe_list, char **dirs)
 {
 	pid_t	child_pid_1;
 	pid_t	child_pid_last;
 
 	child_pid_1 = fork();
 	if (child_pid_1 == -1)
-		exit_error_message("Failed to create first child", -1, dirs);
+		exit_error_message("Failed to create first child", -1, dirs, pipe_list);
 	if (child_pid_1 == 0)
-		first_child_process(param.argv, param.envp, pipe_list, dirs);
+		frst_chld_proc(param.argv, param.envp, pipe_list, dirs);
 	if (wait_child_process(child_pid_1) != 0)
-		exit_error_message("Failed to fork last process", -1, dirs);
+		exit_error_message("Failed to fork last process", -1, dirs, pipe_list);
 	loop_middle_child(param, pipe_list, dirs);
 	child_pid_last = fork();
 	if (child_pid_last == -1)
-		exit_error_message("Failed to create last child", -1, dirs);
+		exit_error_message("Failed to create last child", -1, dirs, pipe_list);
 	if (child_pid_last == 0)
 		final_chld_proc(&param.argv[param.argc - 2], param.envp,
 				pipe_list_last(pipe_list), dirs);
 	close_pipe_fd(pipe_list_last(pipe_list));
 	if (wait_child_process(child_pid_last) != 0)
-		exit_error_message("Failed to fork first process", -1, dirs);
+		exit_error_message("Failed to fork first process", -1, dirs, pipe_list);
 }
 
 void	parse_args(int argc, t_bool here_doc)
@@ -161,8 +161,8 @@ void	parse_args(int argc, t_bool here_doc)
 	{
 		ft_putstr_fd("Usage: ./pipex <infile> <cmd1> ... <cmdn> <outfile>", 2);
 		ft_putstr_fd("\nOR\n", 2);
-		exit_error_message(
-				"./pipex here_doc <limiter> <cmd1> <cmd2> <file>\n", -1, NULL);
+		exit_error_message("./pipex here_doc <limiter> <cmd1> <cmd2> <file>\n",
+			   	-1, NULL, NULL);
 	}
 }
 
@@ -176,13 +176,13 @@ int	main(int argc, char **argv, char **envp)
 	char			**dirs;
 	t_pipe			*pipe_list;
 	t_bool			here_doc;
-	t_cmdlinearg	parameter;
+	t_shellarg		parameter;
 
-	pipe_list = pipe_list_create(argc);
-	parameter_init(argc, argv, envp, &parameter);
 	here_doc = ft_bool_strcmp("here_doc", argv[1]);
 	parse_args(argc, here_doc);
+	parameter_init(argc, argv, envp, &parameter);
 	dirs = get_dirs(envp);
+	pipe_list = pipe_list_create(argc);
 	if (here_doc == TRUE)
 		handle_here_doc();
 	pipe_commands(parameter, pipe_list, dirs);
