@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/14 15:16:24 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/14 19:32:54 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	frst_chld_proc(char **argv, char **envp, t_pipe *pipe_node, char **dirs)
 	ft_free_matrix(dirs);
 	if (!path)
 		clean_contents(cmd_and_args, pipe_node, 3);
-	dup2(pipe_fd[1], STDOUT_FILENO);
+	dup2(pipe_node->fd[1], STDOUT_FILENO);
 	dup2(fd, STDIN_FILENO);
 	close_pipe_fd(pipe_node);
 	close(fd);

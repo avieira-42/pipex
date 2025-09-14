@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 02:51:49 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/14 15:05:55 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/14 19:28:01 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,11 @@ t_pipe	*pipe_list_node_new(void)
 void	pipe_list_free(t_pipe *list)
 {
 	t_pipe	*tmp;
+	t_pipe	*last;
 
 	tmp = list;
-	while (list != NULL)
+	last = pipe_list_last(list);
+	while (list != last)
 	{
 		tmp = list->next;
 		if (list->is_closed == FALSE)
@@ -42,14 +44,24 @@ void	pipe_list_free(t_pipe *list)
 
 t_pipe	*pipe_list_last(t_pipe *pipe_list)
 {
-	while (pipe_list->next != NULL)
+	t_pipe	*firs;
+	t_pipe	*last;
+
+	first = pipe_list;
+	last = pipe_list;
+	pipe_list = pipe_list->next;
+	while (pipe_list != first)
+	{
+		last = pipe_list;
 		pipe_list = pipe_list->next;
-	return pipe_list;
+	}
+	return last;
 }
 
 void	pipe_list_add_back(t_pipe *pipe_list, t_pipe *pipe_new)
 {
 	pipe_list = pipe_list_last(pipe_list);
+	pipe_new->next = pipe_list;
 	pipe_list->next = pipe_new;
 }
 
@@ -58,6 +70,7 @@ t_pipe	*pipe_list_create(int argc)
 	int		n;
 	t_pipe	*pipe_list;
 	t_pipe	*pipe_node_new;
+	t_pipe	*pipe_iterator;
 
 	pipe_list = NULL;
 	n = 0;

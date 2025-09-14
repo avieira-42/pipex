@@ -1,11 +1,11 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */ /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/22 03:08:38 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/10 16:58:42 by avieira-         ###   ########.fr       */
+/*   pipex_bonus.h                                      :+:      :+:    :+:   */ /*                                                    +:+ +:+         +:+     */
+/*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/14 18:39:35 by a-soeiro          #+#    #+#             */
+/*   Updated: 2025/09/14 18:40:17 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,21 +34,23 @@ typedef struct s_pipe
 	struct s_pipe	*next;
 }	t_pipe;
 
-typedef struct s_cmdlinearg
+typedef struct s_shellarg
 {
 	int		argc;
 	char	**argv;
 	char	**envp;
-}	t_cmdlinearg;
+}	t_shellarg;
 
 int		close_pipe_fd(t_pipe *pipe_node);
 char	*join_command(char *dir, char *cmd);
 char	**get_dirs(char **envp);
 void	get_path(char **dirs, char **path, char *cmd);
-void	clean_contents(char **matrix, int *pipe_fd, int exit_code);
-void	exit_error_message(char *message, int error_code, char **dirs);
-int		return_error_message(char *message, int error_code, char **dirs);
-void	parameter_init(int argc, char **argv, char **envp, t_cmdlinearg *param);
+void	clean_contents(char **matrix, t_pipe *pipe_list, int exit_code);
+void	exit_error_message(char *message, int error_code,
+		char **dirs, t_pipe *pipe_list);
+int		return_error_message(char *message, int error_code,
+		char **dirs, t_pipe *pipe_list);
+void	parameter_init(int argc, char **argv, char **envp, t_shellarg *param);
 t_pipe	*pipe_list_node_new(void);
 void	pipe_list_free(t_pipe *list);
 void	pipe_list_add_back(t_pipe *pipe_list, t_pipe *pipe_new);

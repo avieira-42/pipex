@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 14:35:40 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/14 15:21:07 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/14 18:38:39 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,29 @@ int	close_pipe_fd(t_pipe *pipe_node)
 	return (-1);
 }
 
-void	exit_error_message(char *message, int error_code, char **dirs)
+void	exit_error_message(char *message, int error_code,
+		char **dirs, t_pipe *pipe_list)
 {
 	if (dirs)
 		ft_free_matrix(dirs);
 	ft_putstr_fd("Error\n", 2);
 	ft_putstr_fd(message, 2);
 	ft_putstr_fd("\n", 2);
+	if (pipe_list)
+		pipe_list_free(pipe_list);
 	exit(error_code);
 }
 
-int	return_error_message(char *message, int error_code, char **dirs)
+int	return_error_message(char *message, int error_code,
+		char **dirs, t_pipe *pipe_list)
 {
 	if (dirs)
 		ft_free_matrix(dirs);
 	ft_putstr_fd("Error\n", 2);
 	ft_putstr_fd(message, 2);
 	ft_putstr_fd("\n", 2);
+	if (pipe_list)
+		pipe_list_free(pipe_list);
 	return (error_code);
 }
 
@@ -44,6 +50,7 @@ void	clean_contents(char **matrix, int *pipe_list, int exit_code)
 {
 	if (matrix)
 		ft_free_matrix(matrix);
-	pipe_list_free(pipe_list);
+	if (pipe_list)
+		pipe_list_free(pipe_list);
 	exit(exit_code);
 }
