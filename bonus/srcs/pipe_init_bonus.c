@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe_init.c                                        :+:      :+:    :+:   */
+/*   pipe_init_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 03:32:42 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/12 03:37:03 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/12 18:34:21 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	parameter_init(int argc, char **argv, char **envp, t_cmdlinearg *param)
 {
-	parameter->argc = argc;
-	parameter->argv = argv;
-	parameter->envp = envp;
+	param->argc = argc;
+	param->argv = argv;
+	param->envp = envp;
 }

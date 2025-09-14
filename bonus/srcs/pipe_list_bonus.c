@@ -6,13 +6,13 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 02:51:49 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/12 03:28:34 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/14 15:05:55 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex_bonus.h"
 
-t_pipe	*pipe_list_node_new(void);
+t_pipe	*pipe_list_node_new(void)
 {
 	t_pipe	*pipe_node;
 
@@ -20,6 +20,8 @@ t_pipe	*pipe_list_node_new(void);
 	if (pipe_node == NULL)
 		return (NULL);
 	pipe_node->return_value = pipe(pipe_node->fd);
+	pipe_node->next = NULL;
+	pipe_node->is_closed = FALSE;
 	return (pipe_node);
 }
 
@@ -31,17 +33,24 @@ void	pipe_list_free(t_pipe *list)
 	while (list != NULL)
 	{
 		tmp = list->next;
-		close_pipe_fd(list->fd);
+		if (list->is_closed == FALSE)
+			close_pipe_fd(list->fd);
 		free(list);
 		list = tmp;
 	}
 }
 
+t_pipe	*pipe_list_last(t_pipe *pipe_list)
+{
+	while (pipe_list->next != NULL)
+		pipe_list = pipe_list->next;
+	return pipe_list;
+}
+
 void	pipe_list_add_back(t_pipe *pipe_list, t_pipe *pipe_new)
 {
-	while (list != NULL)
-		list = list->next;
-	list->next = pipe_new;
+	pipe_list = pipe_list_last(pipe_list);
+	pipe_list->next = pipe_new;
 }
 
 t_pipe	*pipe_list_create(int argc)
@@ -52,7 +61,7 @@ t_pipe	*pipe_list_create(int argc)
 
 	pipe_list = NULL;
 	n = 0;
-	while (n < argc - 5)
+	while (n < argc - 4)
 	{
 		pipe_node_new = pipe_list_node_new();
 		if (pipe_node_new->return_value == -1)

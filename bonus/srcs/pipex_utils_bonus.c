@@ -1,36 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_bonus_utils.c                                :+:      :+:    :+:   */
+/*   pipex_utils_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/11 16:51:48 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/14 14:38:26 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex_bonus.h"
-
-void	exit_error_message(char *message, int error_code, char **dirs)
-{
-	if (dirs)
-		ft_free_matrix(dirs);
-	ft_putstr_fd("Error\n", 2);
-	ft_putstr_fd(message, 2);
-	ft_putstr_fd("\n", 2);
-	exit(error_code);
-}
-
-int	return_error_message(char *message, int error_code, char **dirs)
-{
-	if (dirs)
-		ft_free_matrix(dirs);
-	ft_putstr_fd("Error\n", 2);
-	ft_putstr_fd(message, 2);
-	ft_putstr_fd("\n", 2);
-	return (error_code);
-}
 
 char	*join_command(char *dir, char *cmd)
 {
@@ -87,13 +67,4 @@ char	**get_dirs(char **envp)
 	if (dirs == NULL)
 		exit_error_message("Failed to get path directories", -1, dirs);
 	return (dirs);
-}
-
-void	clean_contents(char **matrix, int *pipe_fd, int exit_code)
-{
-	if (matrix)
-		ft_free_matrix(matrix);
-	close(pipe_fd[0]);
-	close(pipe_fd[1]);
-	exit(exit_code);
 }

@@ -6,18 +6,11 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/12 03:48:57 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/14 15:16:24 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex_bonus.h"
-
-int	close_pipe_fd(int *pipe_fd)
-{
-	close(pipe_fd[0]);
-	close(pipe_fd[1]);
-	return (-1);
-}
 
 int	wait_child_process(pid_t child_pid)
 {
@@ -39,7 +32,7 @@ int	wait_child_process(pid_t child_pid)
 	return (exit_code);
 }
 
-void	first_child_process(char **argv, char **envp, int *pipe_fd, char **dirs)
+void	frst_chld_proc(char **argv, char **envp, t_pipe *pipe_node, char **dirs)
 {
 	char	*path;
 	char	**cmd_and_args;
@@ -48,24 +41,24 @@ void	first_child_process(char **argv, char **envp, int *pipe_fd, char **dirs)
 	path = NULL;
 	fd = open(argv[1], O_RDONLY, 0777);
 	if (fd == -1)
-		clean_contents(dirs, pipe_fd, 1);
+		clean_contents(dirs, pipe_node, 1);
 	cmd_and_args = ft_split(argv[2], ' ');
 	if (!cmd_and_args)
-		clean_contents(dirs, pipe_fd, 2);
+		clean_contents(dirs, pipe_node, 2);
 	get_path(dirs, &path, cmd_and_args[0]);
 	ft_free_matrix(dirs);
 	if (!path)
-		clean_contents(cmd_and_args, pipe_fd, 3);
+		clean_contents(cmd_and_args, pipe_node, 3);
 	dup2(pipe_fd[1], STDOUT_FILENO);
 	dup2(fd, STDIN_FILENO);
-	close_pipe_fd(pipe_fd);
+	close_pipe_fd(pipe_node);
 	close(fd);
 	execve(path, cmd_and_args, envp);
 	free(path);
 	exit(4);
 }
 
-void	final_child_process(char **argv, char **envp, int *pipe_fd, char **dirs)
+void	final_chld_proc(char **argv, char **envp, t_pipe *pipe_lst, char **dirs)
 {
 	char	*path;
 	char	**cmd_and_args;
@@ -77,21 +70,21 @@ void	final_child_process(char **argv, char **envp, int *pipe_fd, char **dirs)
 		exit(1);
 	cmd_and_args = ft_split(*argv, ' ');
 	if (!cmd_and_args)
-		clean_contents(dirs, pipe_fd, 2);
+		clean_contents(dirs, pipe_lst->fd, 2);
 	get_path(dirs, &path, cmd_and_args[0]);
 	ft_free_matrix(dirs);
 	if (!path)
-		clean_contents(cmd_and_args, pipe_fd, 3);
-	dup2(pipe_fd[0], STDIN_FILENO);
+		clean_contents(cmd_and_args, pipe_lst->fd, 3);
+	dup2(pipe_lst->fd[0], STDIN_FILENO);
 	dup2(fd, STDOUT_FILENO);
-	close_pipe_fd(pipe_fd);
+	close_pipe_fd(pipe_lst->fd);
 	close(fd);
 	execve(path, cmd_and_args, envp);
 	free(path);
 	exit(4);
 }
 
-void	middle_child_process(char *argv, char **envp, int *pipe_fd, int *pipe_fd_middle, char **dirs)
+void	mid_chld_process(char *argv, char **envp, t_pipe *pipe_lst, char **dirs)
 {
 	char    *path;
 	char    **cmd_and_args;
@@ -99,15 +92,21 @@ void	middle_child_process(char *argv, char **envp, int *pipe_fd, int *pipe_fd_mi
 	path = NULL;
 	cmd_and_args = ft_split(argv, ' ');
 	if (!cmd_and_args)
-		clean_contents(dirs, pipe_fd, 2);
+	{
+		close_pipe_fd(pipe_lst); //	 MAYBE
+		clean_contents(dirs, pipe_lst->next->fd, 2); // UPDATE
+	}
 	get_path(dirs, &path, cmd_and_args[0]);
 	ft_free_matrix(dirs);
 	if (!path)
-		clean_contents(cmd_and_args, pipe_fd, 3);
-	dup2(pipe_fd[0], STDIN_FILENO);
-	dup2(pipe_fd_middle[1], STDOUT_FILENO);
-	close_pipe_fd(pipe_fd);
-	close_pipe_fd(pipe_fd_middle);
+	{
+		close_pipe_fd(pipe_lst); // CLEAN
+		clean_contents(cmd_and_args, pipe_lst->next->fd, 2); // CONTENTS
+	}
+	dup2(pipe_lst->fd[0], STDIN_FILENO);
+	dup2(pipe_lst->next->fd[1], STDOUT_FILENO);
+	close_pipe_fd(pipe_lst);
+	close_pipe_fd(pipe_lst);
 	execve(path, cmd_and_args, envp);
 	free(path);
 }
@@ -118,20 +117,21 @@ void	loop_middle_child(t_cmdlinearg param, t_pipe *pipe_list, char **dirs)
 	pid_t	child_pid_middle;
 
 	n = -1;
-	while (++n < argc - 5)
+	while (++n < param.argc - 5)
 	{
 		child_pid_middle = fork();
 		if (child_pid_middle == -1)
 			ft_putstr_fd("Need to handle loop middle_child fork failure", 2);
 		if (child_pid_middle == 0)
-			middle_child_process(param.argv[n + 4], envp, pipe_list, dirs);
-		close_pipe_fd(pipe_fd);
+			mid_chld_process(param.argv[n + 4], param.envp, pipe_list, dirs);
+		close_pipe_fd(pipe_list);
 		if (wait_child_process(child_pid_middle) != 0)
 			exit_error_message("Failed to fork first process", -1, dirs);
+		pipe_list = pipe_list->next;
 	}
 }
 
-void	pipe_commands(t_cmdlinearg parameter, t_pipe pipe_list, char **dirs)
+void	pipe_commands(t_cmdlinearg param, t_pipe *pipe_list, char **dirs)
 {
 	pid_t	child_pid_1;
 	pid_t	child_pid_last;
@@ -140,28 +140,19 @@ void	pipe_commands(t_cmdlinearg parameter, t_pipe pipe_list, char **dirs)
 	if (child_pid_1 == -1)
 		exit_error_message("Failed to create first child", -1, dirs);
 	if (child_pid_1 == 0)
-		first_child_process(argv, envp, pipe_fd, dirs);
+		first_child_process(param.argv, param.envp, pipe_list, dirs);
 	if (wait_child_process(child_pid_1) != 0)
 		exit_error_message("Failed to fork last process", -1, dirs);
-	loop_middle_child(parameter, pipe_list, dirs);
+	loop_middle_child(param, pipe_list, dirs);
 	child_pid_last = fork();
 	if (child_pid_last == -1)
 		exit_error_message("Failed to create last child", -1, dirs);
 	if (child_pid_last == 0)
-		final_child_process(&argv[argc - 2], envp, pipe_fd_last, dirs);
-	close_pipe_fd(pipe_fd);
-	close_pipe_fd(pipe_fd_last);
+		final_chld_proc(&param.argv[param.argc - 2], param.envp,
+				pipe_list_last(pipe_list), dirs);
+	close_pipe_fd(pipe_list_last(pipe_list));
 	if (wait_child_process(child_pid_last) != 0)
 		exit_error_message("Failed to fork first process", -1, dirs);
-}
-
-t_pipe	*pipe_list_create()
-{
-	t_pipe	*pipe_list;
-
-	pipe_list = NULL;
-
-	return (pipe_list);
 }
 
 void	parse_args(int argc, t_bool here_doc)
@@ -188,7 +179,7 @@ int	main(int argc, char **argv, char **envp)
 	t_cmdlinearg	parameter;
 
 	pipe_list = pipe_list_create(argc);
-	parameter_init(&parameter, argc, argv, envp);
+	parameter_init(argc, argv, envp, &parameter);
 	here_doc = ft_bool_strcmp("here_doc", argv[1]);
 	parse_args(argc, here_doc);
 	dirs = get_dirs(envp);
