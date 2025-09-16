@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/14 23:59:52 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/17 00:02:49 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,33 +51,7 @@ void	frst_chld_proc(char **argv, char **envp, t_pipe *pipe_node, char **dirs)
 		clean_contents(cmd_and_args, pipe_node, 3);
 	dup2(pipe_node->fd[1], STDOUT_FILENO);
 	dup2(fd, STDIN_FILENO);
-	close_pipe_fd(pipe_node);
-	close(fd);
-	execve(path, cmd_and_args, envp);
-	free(path);
-	exit(4);
-}
-
-void	final_chld_proc(char **argv, char **envp, t_pipe *pipe_lst, char **dirs)
-{
-	char	*path;
-	char	**cmd_and_args;
-	int		fd;
-
-	path = NULL;
-	fd = open(*(argv + 1), O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	if (fd == -1)
-		exit(1);
-	cmd_and_args = ft_split(*argv, ' ');
-	if (!cmd_and_args)
-		clean_contents(dirs, pipe_lst, 2);
-	get_path(dirs, &path, cmd_and_args[0]);
-	ft_free_matrix(dirs);
-	if (!path)
-		clean_contents(cmd_and_args, pipe_lst, 3);
-	dup2(pipe_lst->fd[0], STDIN_FILENO);
-	dup2(fd, STDOUT_FILENO);
-	close_pipe_fd(pipe_lst);
+	pipe_list_free(pipe_node);
 	close(fd);
 	execve(path, cmd_and_args, envp);
 	free(path);
@@ -105,10 +79,35 @@ void	mid_chld_process(char *argv, char **envp, t_pipe *pipe_lst, char **dirs)
 	}
 	dup2(pipe_lst->fd[0], STDIN_FILENO);
 	dup2(pipe_lst->next->fd[1], STDOUT_FILENO);
-	close_pipe_fd(pipe_lst);
-	close_pipe_fd(pipe_lst);
+	pipe_list_free(pipe_lst);
 	execve(path, cmd_and_args, envp);
 	free(path);
+}
+
+void	final_chld_proc(char **argv, char **envp, t_pipe *pipe_lst, char **dirs)
+{
+	char	*path;
+	char	**cmd_and_args;
+	int		fd;
+
+	path = NULL;
+	fd = open(*(argv + 1), O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	if (fd == -1)
+		exit(1);
+	cmd_and_args = ft_split(*argv, ' ');
+	if (!cmd_and_args)
+		clean_contents(dirs, pipe_lst, 2);
+	get_path(dirs, &path, cmd_and_args[0]);
+	ft_free_matrix(dirs);
+	if (!path)
+		clean_contents(cmd_and_args, pipe_lst, 3);
+	dup2(pipe_lst->fd[0], STDIN_FILENO);
+	dup2(fd, STDOUT_FILENO);
+	pipe_list_free(pipe_lst);
+	close(fd);
+	execve(path, cmd_and_args, envp);
+	free(path);
+	exit(4);
 }
 
 void	loop_middle_child(t_shellarg param, t_pipe *pipe_list, char **dirs)
@@ -123,7 +122,7 @@ void	loop_middle_child(t_shellarg param, t_pipe *pipe_list, char **dirs)
 		if (child_pid_middle == -1)
 			ft_putstr_fd("Need to handle loop middle_child fork failure", 2);
 		if (child_pid_middle == 0)
-			mid_chld_process(param.argv[n + 4], param.envp, pipe_list, dirs);
+			mid_chld_process(param.argv[n + 3], param.envp, pipe_list, dirs);
 		close_pipe_fd(pipe_list);
 		if (wait_child_process(child_pid_middle) != 0)
 			exit_error_message("Failed to fork first process", -1, dirs, pipe_list);
@@ -166,11 +165,6 @@ void	parse_args(int argc, t_bool here_doc)
 	}
 }
 
-void	handle_here_doc()
-{
-	ft_putstr_fd("HANDLE HERE_DOC!!", 2);
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	char			**dirs;
@@ -179,12 +173,15 @@ int	main(int argc, char **argv, char **envp)
 	t_shellarg		parameter;
 
 	here_doc = ft_bool_strcmp("here_doc", argv[1]);
+	if (here_doc == TRUE)
+		here_doc(); //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	parse_args(argc, here_doc);
 	parameter_init(argc, argv, envp, &parameter);
 	dirs = get_dirs(envp);
+	if (dirs == NULL)
+		return (1);
 	pipe_list = pipe_list_create(argc);
-	if (here_doc == TRUE)
-		handle_here_doc();
 	pipe_commands(parameter, pipe_list, dirs);
+	pipe_list_free(pipe_list);
 	ft_free_matrix(dirs);
 }

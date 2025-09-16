@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 02:51:49 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/14 23:41:38 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/16 22:52:16 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_pipe	*pipe_list_node_new(void)
 {
 	t_pipe	*pipe_node;
 
-	pipe_node = malloc (sizeof(t_pipe));
+	pipe_node = malloc(sizeof(t_pipe));
 	if (pipe_node == NULL)
 		return (NULL);
 	pipe_node->return_value = pipe(pipe_node->fd);
@@ -40,6 +40,9 @@ void	pipe_list_free(t_pipe *list)
 		free(list);
 		list = tmp;
 	}
+	if (list->is_closed == FALSE)
+		close_pipe_fd(list);
+	free(list);
 }
 
 t_pipe	*pipe_list_last(t_pipe *pipe_list)
