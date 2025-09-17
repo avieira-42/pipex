@@ -6,7 +6,7 @@
 /*   By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 23:21:19 by avieira-          #+#    #+#             */
-/*   Updated: 2025/09/17 15:12:23 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/17 14:54:10 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,20 @@ void	argv_recreate(int *argc, char ***argv)
 	(*argc)--;
 	argv_new = malloc(sizeof(char *) * ((*argc) + 1));
 	n = 0;
+
 	while (n < *argc)
 	{
 		if (n == 1)
+		{
 			argv_new[n] = ft_strdup(INFILE);
-		else if (n > 1)
-			argv_new[n] = ft_strdup((*argv)[n + 1]);
-		if (argv_new[n] == NULL)
-			ft_free_matrix(argv_new);
+			if (argv[n]
+		}
+		else
+		{
+			argv_new[n] = ft_strdup((*argv)[n]);
+			if (argv_new[n] == NULL)
+				ft_free_matrix(argv_new);
+		}
 		n++;
 	}
 	*argv = argv_new;
@@ -38,7 +44,7 @@ void	user_input_read(char *limiter)
 	int		user_input_fd;
 	char	*line;
 
-	user_input_fd = open(INFILE, O_CREAT | O_WRONLY | O_APPEND, 0777);
+	user_input_fd = open(INFILE, O_CREAT | O_WRONLY | O_APPEND | O_TRUNC, 0777);
 	if (user_input_fd == -1)
 		exit_error_message("Failed to create user input file", 3, NULL, NULL);
 	line = ft_strdup(FIRST_LINE);
@@ -52,10 +58,7 @@ void	user_input_read(char *limiter)
 	{
 		free(line);
 		line = get_next_line(0);
-		if (line == NULL)
-			break;
-		if (ft_bool_strcmp(line, limiter) == FALSE)
-			ft_putstr_fd(line, user_input_fd);
+		ft_putstr_fd(line, user_input_fd);
 	}
 	free(line);
 	close(user_input_fd);

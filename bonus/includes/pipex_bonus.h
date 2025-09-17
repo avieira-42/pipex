@@ -1,11 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_bonus.h                                      :+:      :+:    :+:   */ /*                                                    +:+ +:+         +:+     */
+/*   pipex_bonus.h                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 18:39:35 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/14 18:40:17 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/17 14:46:25 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +21,7 @@
 # include "../../libs/libft/include/libft.h"
 
 # define NEW_LINE "\n"
-# define USER_INFILE_NAME "user_infile"
+# define INFILE "user_infile"
 # define FIRST_LINE	"An string to be allocated then freed right away"
 
 typedef struct s_wait
