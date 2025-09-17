@@ -6,11 +6,11 @@
 /*   By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 22:11:13 by avieira-          #+#    #+#             */
-/*   Updated: 2025/09/18 00:52:35 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/18 00:54:01 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libft.h"
+#include "libs/libft/include/libft.h"
 
 int	ft_found_newline(char *line)
 {

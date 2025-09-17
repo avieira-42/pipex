@@ -6,11 +6,11 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 00:46:29 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/18 00:57:55 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/18 00:54:21 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libft.h"
+#include "libs/libft/include/libft.h"
 
 void	ft_removeline(char *buf)
 {
