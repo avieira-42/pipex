@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/17 00:02:49 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/17 13:15:27 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,13 +173,15 @@ int	main(int argc, char **argv, char **envp)
 	t_shellarg		parameter;
 
 	here_doc = ft_bool_strcmp("here_doc", argv[1]);
-	if (here_doc == TRUE)
-		here_doc(); //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	parse_args(argc, here_doc);
+	if (here_doc == TRUE)
+		here_doc_setup(&argc, &argv);
+	if (argv == NULL)
+		return (2);
 	parameter_init(argc, argv, envp, &parameter);
 	dirs = get_dirs(envp);
 	if (dirs == NULL)
-		return (1);
+		return (3);
 	pipe_list = pipe_list_create(argc);
 	pipe_commands(parameter, pipe_list, dirs);
 	pipe_list_free(pipe_list);

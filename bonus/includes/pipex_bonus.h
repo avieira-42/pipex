@@ -19,6 +19,10 @@
 # include <fcntl.h>
 # include "../../libs/libft/include/libft.h"
 
+# define NEW_LINE "\n"
+# define USER_INFILE_NAME "user_infile"
+# define FIRST_LINE	"An string to be allocated then freed right away"
+
 typedef struct s_wait
 {
 	int		status;
@@ -56,5 +60,8 @@ void	pipe_list_free(t_pipe *list);
 void	pipe_list_add_back(t_pipe *pipe_list, t_pipe *pipe_new);
 t_pipe	*pipe_list_create(int argc);
 t_pipe	*pipe_list_last(t_pipe *pipe_list);
+void	here_doc_setup(int *argc, char ***argv);
+void	user_input_read(char *limiter);
+void	argv_recreate(int *argc, char ***argv);
 
 #endif
