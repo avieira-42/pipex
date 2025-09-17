@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/09 19:23:19 by jesusoncrac       #+#    #+#             */
-/*   Updated: 2025/06/20 21:00:03 by avieira-         ###   ########.fr       */
+/*   Created: 2025/05/01 22:11:13 by avieira-          #+#    #+#             */
+/*   Updated: 2025/05/11 17:25:57 by jesusoncrac      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libft.h"
+#include "get_next_line.h"
 
 int	ft_found_newline(char *line)
 {

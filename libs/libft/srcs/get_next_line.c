@@ -1,16 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/09 17:22:17 by jesusoncrac       #+#    #+#             */
-/*   Updated: 2025/05/13 23:50:48 by avieira-         ###   ########.fr       */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */ /*   By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+        */ /*                                                +#+#+#+#+#+   +#+           */ /*   Created: 2025/05/01 16:49:43 by avieira-          #+#    #+#             */ /*   Updated: 2025/09/18 00:14:39 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libft.h"
+#include "get_next_line.h"
 
 void	ft_removeline(char *buf)
 {
@@ -52,10 +48,15 @@ char	*ft_writeline(char *line, char *buf)
 	return (free(line), new_line);
 }
 
-char	*ft_readline(int fd, char *buf, char *line)
+char	*get_next_line(int fd)
 {
-	ssize_t		bytes_read;
+	ssize_t			bytes_read;
+	char			*line;
+	static char		buf[BUFFER_SIZE + 1];
 
+	if (fd < 0 || BUFFER_SIZE < 1)
+		return (NULL);
+	line = NULL;
 	while (!ft_found_newline(line))
 	{
 		if (!*buf)
@@ -70,29 +71,6 @@ char	*ft_readline(int fd, char *buf, char *line)
 		if (!line)
 			return (NULL);
 		ft_removeline(buf);
-	}
-	return (line);
-}
-
-char	*get_next_line(int fd)
-{
-	char			*line;
-	static char		*buf[1024];
-
-	line = NULL;
-	if (fd < 0 || BUFFER_SIZE < 1 || fd > 1024)
-		return (NULL);
-	if (!buf[fd])
-	{
-		buf[fd] = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-		if (!buf[fd])
-			return (NULL);
-	}
-	line = ft_readline(fd, buf[fd], line);
-	if (!line || !*line)
-	{
-		free(buf[fd]);
-		buf[fd] = NULL;
 	}
 	return (line);
 }
