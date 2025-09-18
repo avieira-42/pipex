@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/18 12:48:07 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/18 13:33:58 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,10 @@ void	frst_chld_proc(t_args param, t_pipe *pipe_node, t_utils utils)
 {
 	char	*path;
 	char	**cmd_and_args;
-	int		fd;
 
 	path = NULL;
-	fd = open(param.argv[1], O_RDONLY, 0777);
-	if (fd == -1)
+	utils.fd = open(param.argv[1], O_RDONLY, 0777);
+	if (utils.fd == -1)
 		clean_contents(utils.dirs, pipe_node, param.argv, utils);
 	cmd_and_args = ft_split(param.argv[2], ' ');
 	if (!cmd_and_args)
@@ -50,9 +49,9 @@ void	frst_chld_proc(t_args param, t_pipe *pipe_node, t_utils utils)
 	if (!path)
 		clean_contents(cmd_and_args, pipe_node, param.argv, utils);
 	dup2(pipe_node->fd[1], STDOUT_FILENO);
-	dup2(fd, STDIN_FILENO);
+	dup2(utils.fd, STDIN_FILENO);
 	pipe_list_free(pipe_node);
-	close(fd);
+	close(utils.fd);
 	execve(path, cmd_and_args, param.envp);
 	free(path);
 	exit(4);
@@ -81,30 +80,30 @@ void	mid_chld_pro(t_args param, t_pipe *pipe_lst, t_utils utils, int n)
 	free(path);
 }
 
-void	fi_chld_pro(t_args param, t_pipe *pipe_lst, t_utils util, int n)
+void	fi_chld_pro(t_args arg, t_pipe *pipe_lst, t_utils util, int n)
 {
 	char	*path;
 	char	**cmd_and_args;
 
 	path = NULL;
 	if (util.here_doc == TRUE)
-		util.fd = open(param.argv[n + 1], O_CREAT | O_RDWR | O_APPEND, 0777);
+		util.fd = open(arg.argv[n + 1], O_CREAT | O_RDWR | O_APPEND, 0777);
 	else
-		if util.fd = open(param.argv[n + 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	if (fd == -1)
+		util.fd = open(arg.argv[n + 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	if (util.fd == -1)
 		exit(1);
-	cmd_and_args = ft_split(param.argv[n], ' ');
+	cmd_and_args = ft_split(arg.argv[n], ' ');
 	if (!cmd_and_args)
-		clean_contents(util.dirs, pipe_lst, param.argv, util);
+		clean_contents(util.dirs, pipe_lst, arg.argv, util);
 	get_path(util.dirs, &path, cmd_and_args[0]);
 	ft_free_matrix(util.dirs);
 	if (!path)
-		clean_contents(cmd_and_args, pipe_lst, param.argv, util);
+		clean_contents(cmd_and_args, pipe_lst, arg.argv, util);
 	dup2(pipe_lst->fd[0], STDIN_FILENO);
-	dup2(fd, STDOUT_FILENO);
+	dup2(util.fd, STDOUT_FILENO);
 	pipe_list_free(pipe_lst);
-	close(fd);
-	execve(path, cmd_and_args, param.envp);
+	close(util.fd);
+	execve(path, cmd_and_args, arg.envp);
 	free(path);
 	exit(4);
 }
@@ -186,6 +185,8 @@ int	main(int argc, char **argv, char **envp)
 	pip_cmd(parameter, pipe_list, utils);
 	pipe_list_free(pipe_list);
 	ft_free_matrix(dirs);
+	if (here_doc == TRUE)
+		unlink(argv[1]);
 	if (here_doc == TRUE)
 		ft_free_matrix(argv);
 }
