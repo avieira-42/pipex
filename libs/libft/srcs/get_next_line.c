@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 00:46:29 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/18 00:57:55 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/18 01:30:34 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ void	ft_removeline(char *buf)
 	char	*ptr;
 	i = 0;
 	ptr = buf;
-	while (buf[i] != '\n' && buf[i])
-		i++;
+	while (buf[i] != '\n' && buf[i]) i++;
 	ptr += i;
 	if (buf[i] == '\n')
 		ptr++;
@@ -67,9 +66,7 @@ char	*get_next_line(int fd)
 		if (!*buf)
 		{
 			bytes_read = read(fd, buf, BUFFER_SIZE);
-			if (bytes_read == -1)
-				return (free(line), NULL);
-			if (bytes_read == 0)
+			if (bytes_read <= 0)
 				break ;
 		}
 		line = ft_writeline(line, buf);
@@ -77,6 +74,8 @@ char	*get_next_line(int fd)
 			return (NULL);
 		ft_removeline(buf);
 	}
+	if (!line)
+		return (NULL);
 	if (!line && *line == '\0')
 		return (free(line), NULL);
 	return (line);

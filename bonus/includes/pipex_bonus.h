@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 18:39:35 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/17 21:34:17 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/18 02:45:41 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int		close_pipe_fd(t_pipe *pipe_node);
 char	*join_command(char *dir, char *cmd);
 char	**get_dirs(char **envp);
 void	get_path(char **dirs, char **path, char *cmd);
-void	clean_contents(char **matrix, t_pipe *pipe_list, int exit_code);
+void	clean_contents(char **matrix, t_pipe *pipe_lst, char **av, t_utils util);
 void	exit_error_message(char *message, int error_code,
 		char **dirs, t_pipe *pipe_list);
 int		return_error_message(char *message, int error_code,

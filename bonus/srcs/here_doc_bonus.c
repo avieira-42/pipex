@@ -6,7 +6,7 @@
 /*   By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 23:21:19 by avieira-          #+#    #+#             */
-/*   Updated: 2025/09/18 00:09:36 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/18 01:25:16 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	user_input_read(char *limiter, char *user_infile_name)
 		line = get_next_line(STDIN_FILENO);
 		if (line == NULL)
 			break;
-		if (ft_bool_strcmp(line, limiter) == TRUE)
+		if (*line == '\0' || ft_bool_strcmp(line, limiter) == TRUE)
 		{
 			free(line);
 			break;

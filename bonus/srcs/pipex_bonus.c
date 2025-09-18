@@ -6,13 +6,13 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/17 23:19:04 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/18 03:22:55 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex_bonus.h"
 
-int	wait_child_process(pid_t child_pid, char *child_phase)
+int	wait_child_process(pid_t child_pid, char *child_phase, char *cmd)
 {
 	int		exit_code;
 	t_wait	wait;
@@ -23,18 +23,16 @@ int	wait_child_process(pid_t child_pid, char *child_phase)
 		return (exit_code);
 	if (WIFEXITED(wait.status))
 		exit_code = (WEXITSTATUS(wait.status));
-	if (exit_code == 1)
-		ft_putstr_fd("Failed to get cmd path\n", 2);
-	else if (exit_code == 2)
-		ft_putstr_fd("Failed to execute cmd\n", 2);
-	else if (exit_code == 3)
-		ft_putstr_fd("Cant find cmd\n", 2);
-	else if (exit_code == 4)
-		ft_putstr_fd("Failed to open infile\n", 2);
+	if (exit_code == 127)
+	{
+		ft_putstr_fd("pipex:", 2);
+		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd(": command not found\n", 2);
+	}
 	return (exit_code);
 }
 
-void	frst_chld_proc(t_args param, t_pipe *pipe_node, char **dirs)
+void	frst_chld_proc(t_args param, t_pipe *pipe_node, t_utils utils)
 {
 	char	*path;
 	char	**cmd_and_args;
@@ -43,14 +41,14 @@ void	frst_chld_proc(t_args param, t_pipe *pipe_node, char **dirs)
 	path = NULL;
 	fd = open(param.argv[1], O_RDONLY, 0777);
 	if (fd == -1)
-		clean_contents(dirs, pipe_node, 1);
+		clean_contents(NULL, pipe_node, param.argv, utils);
 	cmd_and_args = ft_split(param.argv[2], ' ');
 	if (!cmd_and_args)
-		clean_contents(dirs, pipe_node, 2);
-	get_path(dirs, &path, cmd_and_args[0]);
-	ft_free_matrix(dirs);
+		clean_contents(NULL, pipe_node, param.argv, utils);
+	get_path(utils.dirs, &path, cmd_and_args[0]);
+	ft_free_matrix(utils.dirs);
 	if (!path)
-		clean_contents(cmd_and_args, pipe_node, 3);
+		clean_contents(cmd_and_args, pipe_node, param.argv, utils);
 	dup2(pipe_node->fd[1], STDOUT_FILENO);
 	dup2(fd, STDIN_FILENO);
 	pipe_list_free(pipe_node);
@@ -60,33 +58,30 @@ void	frst_chld_proc(t_args param, t_pipe *pipe_node, char **dirs)
 	exit(4);
 }
 
-void	mid_chld_process(char *argv, char **envp, t_pipe *pipe_lst, char **dirs)
+void	mid_chld_pro(t_args param, t_pipe *pipe_lst, t_utils utils, int n)
 {
 	char    *path;
 	char    **cmd_and_args;
 
 	path = NULL;
-	cmd_and_args = ft_split(argv, ' ');
+	cmd_and_args = ft_split(param.argv[n], ' ');
 	if (!cmd_and_args)
-	{
-		close_pipe_fd(pipe_lst); //	 MAYBE
-		clean_contents(dirs, pipe_lst->next, 2); // UPDATE
-	}
-	get_path(dirs, &path, cmd_and_args[0]);
-	ft_free_matrix(dirs);
+		clean_contents(NULL, pipe_lst, param.argv, utils);
+	get_path(utils.dirs, &path, cmd_and_args[0]);
+	ft_free_matrix(utils.dirs);
 	if (!path)
 	{
-		close_pipe_fd(pipe_lst); // CLEAN
-		clean_contents(cmd_and_args, pipe_lst->next, 2); // CONTENTS
+		close_pipe_fd(pipe_lst);
+		clean_contents(cmd_and_args, pipe_lst, param.argv, utils);
 	}
 	dup2(pipe_lst->fd[0], STDIN_FILENO);
 	dup2(pipe_lst->next->fd[1], STDOUT_FILENO);
 	pipe_list_free(pipe_lst);
-	execve(path, cmd_and_args, envp);
+	execve(path, cmd_and_args, param.envp);
 	free(path);
 }
 
-void	fi_chld_pro(char **argv, char **envp,  t_pipe *pipe_lst, t_utils utils)
+void	fi_chld_pro(t_args param, t_pipe *pipe_lst, t_utils utils, int n)
 {
 	char	*path;
 	char	**cmd_and_args;
@@ -94,28 +89,28 @@ void	fi_chld_pro(char **argv, char **envp,  t_pipe *pipe_lst, t_utils utils)
 
 	path = NULL;
 	if (utils.here_doc == TRUE)
-		fd = open(argv[1], O_CREAT | O_RDWR | O_APPEND, 0777);
+		fd = open(param.argv[n + 1], O_CREAT | O_RDWR | O_APPEND, 0777);
 	else
-		fd = open(*(argv + 1), O_WRONLY | O_CREAT | O_TRUNC, 0777);
+		fd = open(param.argv[n + 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (fd == -1)
 		exit(1);
-	cmd_and_args = ft_split(*argv, ' ');
+	cmd_and_args = ft_split(param.argv[n], ' ');
 	if (!cmd_and_args)
-		clean_contents(utils.dirs, pipe_lst, 2);
+		clean_contents(NULL, pipe_lst, param.argv, utils);
 	get_path(utils.dirs, &path, cmd_and_args[0]);
 	ft_free_matrix(utils.dirs);
 	if (!path)
-		clean_contents(cmd_and_args, pipe_lst, 3);
+		clean_contents(cmd_and_args, pipe_lst, param.argv, utils);
 	dup2(pipe_lst->fd[0], STDIN_FILENO);
 	dup2(fd, STDOUT_FILENO);
 	pipe_list_free(pipe_lst);
 	close(fd);
-	execve(path, cmd_and_args, envp);
+	execve(path, cmd_and_args, param.envp);
 	free(path);
 	exit(4);
 }
 
-void	loop_middle_child(t_args param, t_pipe *pipe_list, char **dirs)
+t_pipe	*loop_middle_child(t_args param, t_pipe *pipe_list, t_utils util)
 {
 	int		n;
 	pid_t	child_pid_middle;
@@ -127,11 +122,12 @@ void	loop_middle_child(t_args param, t_pipe *pipe_list, char **dirs)
 		if (child_pid_middle == -1)
 			ft_putstr_fd("Need to handle loop middle_child fork failure", 2);
 		if (child_pid_middle == 0)
-			mid_chld_process(param.argv[n + 3], param.envp, pipe_list, dirs);
+			mid_chld_pro(param, pipe_list, util, n + 3);
 		close_pipe_fd(pipe_list);
-		wait_child_process(child_pid_middle, "middle");
+		wait_child_process(child_pid_middle, "middle", NULL);
 		pipe_list = pipe_list->next;
 	}
+	return (pipe_list);
 }
 
 void	pip_cmd(t_args param, t_pipe *pipe_lst, t_utils utils)
@@ -145,18 +141,16 @@ void	pip_cmd(t_args param, t_pipe *pipe_lst, t_utils utils)
 	if (child_pid_1 == -1)
 		exit_error_message("Failed to create first child", -1, dirs, pipe_lst);
 	if (child_pid_1 == 0)
-		frst_chld_proc(param, pipe_lst, dirs);
-	wait_child_process(child_pid_1, "first");
-	loop_middle_child(param, pipe_lst, dirs);
+		frst_chld_proc(param, pipe_lst, utils);
+	wait_child_process(child_pid_1, "first", NULL);
+	pipe_lst = loop_middle_child(param, pipe_lst, utils);
 	child_pid_last = fork();
 	if (child_pid_last == -1)
 		exit_error_message("Failed to create last child", -1, dirs, pipe_lst);
 	if (child_pid_last == 0)
-		fi_chld_pro(&param.argv[param.argc - 2], param.envp,
-				pipe_list_last(pipe_lst), utils);
+		fi_chld_pro(param, pipe_lst, utils, param.argc - 2);
 	close_pipe_fd(pipe_list_last(pipe_lst));
-	if (wait_child_process(child_pid_last, "last") != 0)
-		exit_error_message("Failed to fork first process", -1, dirs, pipe_lst);
+	wait_child_process(child_pid_last, "last", param.argv[param.argc - 1]);
 }
 
 void	parse_args(int argc, t_bool here_doc)
@@ -166,7 +160,7 @@ void	parse_args(int argc, t_bool here_doc)
 		ft_putstr_fd("Usage: ./pipex <infile> <cmd1> ... <cmdn> <outfile>", 2);
 		ft_putstr_fd("\nOR\n", 2);
 		exit_error_message("./pipex here_doc <limiter> <cmd1> <cmd2> <file>\n",
-			   	-1, NULL, NULL);
+				-1, NULL, NULL);
 	}
 }
 
