@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 18:39:35 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/18 02:45:41 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/18 12:45:04 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_args
 
 typedef struct s_utils
 {
+	int		fd;
 	char	**dirs;
 	t_bool	here_doc;
 }	t_utils;

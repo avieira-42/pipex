@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 03:32:42 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/18 02:45:28 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/18 12:45:31 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	parameter_init(int argc, char **argv, char **envp, t_args *param)
 
 void	utils_init(t_utils *utils, char **dirs, t_bool here_doc)
 {
+	utils->fd = 0;
 	utils->here_doc = here_doc;
 	utils->dirs = dirs;
 }

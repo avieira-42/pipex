@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 14:35:40 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/18 03:18:23 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/18 12:37:34 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ void	clean_contents(char **matrix, t_pipe *pipe_lst, char **av, t_utils util)
 {
 	if (util.here_doc == TRUE)
 		ft_free_matrix(av);
-	ft_free_matrix(util.dirs);
 	if (matrix)
 		ft_free_matrix(matrix);
 	if (pipe_lst)
 		pipe_list_free(pipe_lst);
+	exit(-1);
 }
