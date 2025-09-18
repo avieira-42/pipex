@@ -30,6 +30,7 @@ char	*join_command(char *dir, char *cmd);
 char	**get_dirs(char **envp);
 void	get_path(char **dirs, char **path, char *cmd);
 void	clean_contents(char **matrix, int *pipe_fd, int exit_code);
+void	error_message(char *specifier);
 void	exit_error_message(char *message, int error_code, char **dirs);
 int		return_error_message(char *message, int error_code, char **dirs);
 

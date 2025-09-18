@@ -6,11 +6,19 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/10 20:46:57 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/18 21:40:32 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
+
+void	error_message(char *specifier)
+{
+	ft_putstr_fd("pipex_bonus: ", 2);
+	ft_putstr_fd("file not found: ", 2);
+	ft_putstr_fd(specifier, 2);
+	ft_putstr_fd("\n", 2);
+}
 
 void	exit_error_message(char *message, int error_code, char **dirs)
 {

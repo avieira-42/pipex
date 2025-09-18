@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 18:39:35 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/18 12:45:04 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/18 20:13:24 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,16 +51,16 @@ typedef struct s_utils
 	int		fd;
 	char	**dirs;
 	t_bool	here_doc;
+	t_pipe	*pipe_node;
 }	t_utils;
 
 int		close_pipe_fd(t_pipe *pipe_node);
 char	*join_command(char *dir, char *cmd);
 char	**get_dirs(char **envp);
 void	get_path(char **dirs, char **path, char *cmd);
-void	clean_contents(char **matrix, t_pipe *pipe_lst, char **av, t_utils util);
+void	clean_contents(char **matrix, t_utils util, char **av, int exit_code);
+void	error_message(char *specifier);
 void	exit_error_message(char *message, int error_code,
-		char **dirs, t_pipe *pipe_list);
-int		return_error_message(char *message, int error_code,
 		char **dirs, t_pipe *pipe_list);
 void	parameter_init(int argc, char **argv, char **envp, t_args *param);
 t_pipe	*pipe_list_node_new(void);
@@ -70,5 +70,6 @@ t_pipe	*pipe_list_create(int argc);
 t_pipe	*pipe_list_last(t_pipe *pipe_list);
 void	here_doc_setup(int *argc, char ***argv);
 void	utils_init(t_utils *utils, char **dirs, t_bool here_doc);
+void	exit_last(t_utils utils, t_pipe *pipe_list, char **argv, int exit_code);
 
 #endif

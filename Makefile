@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: a-soeiro <marvavieira-@student.42porto.com +#+  +:+       +#+         #
+#    By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/08/22 01:45:12 by a-soeiro          #+#    #+#              #
-#    Updated: 2025/09/18 00:58:21 by a-soeiro         ###   ########.fr        #
+#    Created: 2025/09/18 20:37:24 by avieira-          #+#    #+#              #
+#    Updated: 2025/09/18 20:43:52 by avieira-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 

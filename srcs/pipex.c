@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/10 23:39:39 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/18 21:57:12 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,21 +28,23 @@ void	child_process(char **argv, char **envp, int *pipe_fd, char **dirs)
 	path = NULL;
 	fd = open(argv[1], O_RDONLY, 0777);
 	if (fd == -1)
-		clean_contents(dirs, pipe_fd, 1);
+		error_message(argv[1]);
 	cmd_and_args = ft_split(argv[2], ' ');
 	if (!cmd_and_args)
 		clean_contents(dirs, pipe_fd, 2);
 	get_path(dirs, &path, cmd_and_args[0]);
 	ft_free_matrix(dirs);
 	if (!path)
-		clean_contents(cmd_and_args, pipe_fd, 3);
+		clean_contents(cmd_and_args, pipe_fd, 127);
 	dup2(pipe_fd[1], STDOUT_FILENO);
-	dup2(fd, STDIN_FILENO);
+	if (dup2(fd, STDIN_FILENO) == -1)
+	{
+		free(path);
+		clean_contents(cmd_and_args, pipe_fd, -8);
+	}
 	close_pipe_fd(pipe_fd);
 	close(fd);
 	execve(path, cmd_and_args, envp);
-	free(path);
-	exit(4);
 }
 
 void	scnd_child_process(char **argv, char **envp, int *pipe_fd, char **dirs)
@@ -61,37 +63,32 @@ void	scnd_child_process(char **argv, char **envp, int *pipe_fd, char **dirs)
 	get_path(dirs, &path, cmd_and_args[0]);
 	ft_free_matrix(dirs);
 	if (!path)
-		clean_contents(cmd_and_args, pipe_fd, 3);
+		clean_contents(cmd_and_args, pipe_fd, 127);
 	dup2(pipe_fd[0], STDIN_FILENO);
 	dup2(fd, STDOUT_FILENO);
 	close_pipe_fd(pipe_fd);
 	close(fd);
 	execve(path, cmd_and_args, envp);
-	free(path);
-	exit(4);
 }
 
-int	wait_child_process(pid_t child_pid)
+int	wait_child_process(pid_t child_pid, char *specifier)
 {
 	int		exit_code;
 	t_wait	wait;
 
 	exit_code = 0;
 	wait.pid = waitpid(child_pid, &wait.status, 0);
-	if (WIFEXITED(wait.status))
-		exit_code = (WEXITSTATUS(wait.status));
-	if (exit_code == 1)
-		ft_putstr_fd("Failed to get cmd path\n", 2);
-	else if (exit_code == 2)
-		ft_putstr_fd("Failed to execute cmd\n", 2);
-	else if (exit_code == 3)
-		ft_putstr_fd("Cant find cmd\n", 2);
-	else if (exit_code == 4)
-		ft_putstr_fd("Failed to open infile\n", 2);
+	if (exit_code == 127 || exit_code == -8)
+	{
+		ft_putstr_fd("pipex_bonus: ", 2);
+		ft_putstr_fd("command not found:", 2);
+		ft_putstr_fd(specifier, 2);
+		ft_putstr_fd("\n", 2);
+	}
 	return (exit_code);
 }
 
-void	pipe_commands(char **dirs, char **envp, char **argv)
+int	pipe_commands(char **dirs, char **envp, char **argv)
 {
 	int		pipe_fd[2];
 	pid_t	child_pid1;
@@ -104,25 +101,60 @@ void	pipe_commands(char **dirs, char **envp, char **argv)
 		exit_error_message("Failed to fork", -1, dirs);
 	if (child_pid1 == 0)
 		child_process(argv, envp, pipe_fd, dirs);
-	if (wait_child_process(child_pid1) != 0)
-		exit_error_message("Failed to fork first process", -1, dirs);
 	child_pid2 = fork();
 	if (child_pid2 == -1)
 		exit_error_message("Failed to fork", -1, dirs);
 	if (child_pid2 == 0)
 		scnd_child_process(argv, envp, pipe_fd, dirs);
 	close_pipe_fd(pipe_fd);
-	if (wait_child_process(child_pid2) != 0)
-		exit_error_message("Failed to fork second process", -1, dirs);
+	wait_child_process(child_pid1) != 0;
+	return (wait_child_process(child_pid2));
 }
+
+void	parse_files(char **argv, int argc, t_bool here_doc)
+{
+	if (access(argv[argc -1], F_OK) == 0
+		&& access(argv[argc - 1], R_OK | W_OK) == -1)
+	{
+		ft_putstr_fd("pipex_bonus: ", 2);
+		ft_putstr_fd("permission denied: ", 2);
+		ft_putstr_fd(argv[argc - 1], 2);
+		ft_putstr_fd("\n", 2);
+	}
+	if (access(argv[1], R_OK | W_OK | X_OK) == -1 && here_doc == FALSE)
+	{
+		ft_putstr_fd("pipex_bonus: ", 2);
+		ft_putstr_fd("permission denied: ", 2);
+		ft_putstr_fd(argv[1], 2);
+		ft_putstr_fd("\n", 2);
+	}
+	if ((access(argv[argc -1], F_OK) == 0
+		&& access(argv[argc - 1], R_OK) == -1)
+	|| (access(argv[1], R_OK | W_OK | X_OK) == -1 && here_doc == FALSE))
+		exit(1);
+}
+
+void	parse_args(char **argv, int argc, t_boo)
+{
+	if (argc < 5 || (argc < 6 && here_doc == TRUE))
+	{
+		exit_error_message("Usage: ./pipex <infile> <cmd1> <cmd2> <outfile>",
+			   	2, NULL, NULL);
+	}
+	parse_files(argv, argc, here_doc);
+}
+
 
 int	main(int argc, char **argv, char **envp)
 {
 	char	**dirs;
+	int		exit_code;
 
+	exit_code = 0;
 	if (argc != 5)
 		exit_error_message("Usage: ./pipex infile cmd1 cmd2 outfile", -1, NULL);
 	dirs = get_dirs(envp);
-	pipe_commands(dirs, envp, argv);
+	exit_code = pipe_commands(dirs, envp, argv);
 	ft_free_matrix(dirs);
+	return (exit_code);
 }
