@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/18 21:57:12 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/19 01:05:23 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ int	wait_child_process(pid_t child_pid, char *specifier)
 
 	exit_code = 0;
 	wait.pid = waitpid(child_pid, &wait.status, 0);
+	exit_code = (WEXITSTATUS(wait.status));
 	if (exit_code == 127 || exit_code == -8)
 	{
 		ft_putstr_fd("pipex_bonus: ", 2);
@@ -107,41 +108,47 @@ int	pipe_commands(char **dirs, char **envp, char **argv)
 	if (child_pid2 == 0)
 		scnd_child_process(argv, envp, pipe_fd, dirs);
 	close_pipe_fd(pipe_fd);
-	wait_child_process(child_pid1) != 0;
-	return (wait_child_process(child_pid2));
+	wait_child_process(child_pid1, argv[2]);
+	return (wait_child_process(child_pid2, argv[3]));
 }
 
-void	parse_files(char **argv, int argc, t_bool here_doc)
+void	parse_files(char **argv, int argc)
 {
-	if (access(argv[argc -1], F_OK) == 0
-		&& access(argv[argc - 1], R_OK | W_OK) == -1)
+	if (access(argv[1], F_OK) == 0
+			&& access(argv[1], R_OK | W_OK | X_OK) == -1)
 	{
-		ft_putstr_fd("pipex_bonus: ", 2);
-		ft_putstr_fd("permission denied: ", 2);
-		ft_putstr_fd(argv[argc - 1], 2);
+		ft_putstr_fd("pipex_bonus: permission denied: ", 2);
+		ft_putstr_fd(argv[1], 2);
 		ft_putstr_fd("\n", 2);
 	}
-	if (access(argv[1], R_OK | W_OK | X_OK) == -1 && here_doc == FALSE)
+	if (access(argv[1], F_OK) == -1)
 	{
-		ft_putstr_fd("pipex_bonus: ", 2);
-		ft_putstr_fd("permission denied: ", 2);
+		ft_putstr_fd("pipex_bonus: no such file or directory: ", 2);
 		ft_putstr_fd(argv[1], 2);
+		ft_putstr_fd("\n", 2);
+	}
+	if (access(argv[argc -1], F_OK) == 0
+			&& access(argv[argc - 1], R_OK | W_OK) == -1)
+	{
+		ft_putstr_fd("pipex_bonus: permission denied: ", 2);
+		ft_putstr_fd(argv[argc - 1], 2);
 		ft_putstr_fd("\n", 2);
 	}
 	if ((access(argv[argc -1], F_OK) == 0
 		&& access(argv[argc - 1], R_OK) == -1)
-	|| (access(argv[1], R_OK | W_OK | X_OK) == -1 && here_doc == FALSE))
+	|| (access(argv[1], R_OK | W_OK | X_OK) == -1)
+	|| (access(argv[argc -1], F_OK) == -1))
 		exit(1);
 }
 
-void	parse_args(char **argv, int argc, t_boo)
+void	parse_args(char **argv, int argc)
 {
-	if (argc < 5 || (argc < 6 && here_doc == TRUE))
+	if (argc < 5)
 	{
 		exit_error_message("Usage: ./pipex <infile> <cmd1> <cmd2> <outfile>",
-			   	2, NULL, NULL);
+			   	2, NULL);
 	}
-	parse_files(argv, argc, here_doc);
+	parse_files(argv, argc);
 }
 
 
@@ -150,9 +157,7 @@ int	main(int argc, char **argv, char **envp)
 	char	**dirs;
 	int		exit_code;
 
-	exit_code = 0;
-	if (argc != 5)
-		exit_error_message("Usage: ./pipex infile cmd1 cmd2 outfile", -1, NULL);
+	parse_args(argv, argc);
 	dirs = get_dirs(envp);
 	exit_code = pipe_commands(dirs, envp, argv);
 	ft_free_matrix(dirs);
