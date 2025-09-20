@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 18:39:35 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/20 15:55:55 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/20 17:36:59 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ void	parse_args(char **argv, int argc, t_bool *here_doc);
 char	*join_command(char *dir, char *cmd);
 void	get_path(char **dirs, char **path, char *cmd);
 char	**get_dirs(char **envp);
+void	execute_program(char **envp, char **cmd_and_args, char *path);
 
 // here_doc_bonus.c
 void	here_doc_setup(int *argc, char ***argv);

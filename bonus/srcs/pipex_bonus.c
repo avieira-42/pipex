@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/20 16:16:47 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/20 17:42:28 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	frst_chld_proc(t_args param, t_pipe *pipe_node, t_utils utils)
 	}
 	pipe_list_free(pipe_node);
 	close(utils.fd);
-	execve(path, cmd_and_args, param.envp);
+	execute_program(param.envp, cmd_and_args, path);
 }
 
 void	fi_chld_pro(t_args arg, t_pipe *pipe_lst, t_utils util, int n)
@@ -64,7 +64,7 @@ void	fi_chld_pro(t_args arg, t_pipe *pipe_lst, t_utils util, int n)
 	}
 	pipe_list_free(pipe_lst);
 	close(util.fd);
-	execve(path, cmd_and_args, arg.envp);
+	execute_program(arg.envp, cmd_and_args, path);
 }
 
 int	pip_cmd(t_args args, t_pipe *pipe_lst, t_utils utils)
@@ -91,7 +91,7 @@ int	pip_cmd(t_args args, t_pipe *pipe_lst, t_utils utils)
 		fi_chld_pro(args, pipe_last, utils, args.argc - 2);
 	close_pipe_fd(pipe_last);
 	if (access(args.argv[1], F_OK) == 0)
-		wait_child_process(child_pid_1, args.argv[1]);
+		wait_child_process(child_pid_1, args.argv[2]);
 	loop_wait_pid_middle(pipe_lst, args);
 	return (wait_child_process(pipe_last->wait.pid, args.argv[args.argc - 2]));
 }

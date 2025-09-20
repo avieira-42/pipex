@@ -6,7 +6,7 @@
 /*   By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:32:40 by avieira-          #+#    #+#             */
-/*   Updated: 2025/09/20 15:58:18 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/20 17:37:59 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	loop_wait_pid_middle(t_pipe *pipe_lst, t_args args)
 {
 	int	n;
 
-	n = 0;
+	n = -1;
 	while (++n < args.argc - 5)
 	{
 		wait_child_process(pipe_lst->wait.pid, args.argv[n + 3]);

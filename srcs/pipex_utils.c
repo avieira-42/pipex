@@ -6,7 +6,7 @@
 /*   By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:14:54 by avieira-          #+#    #+#             */
-/*   Updated: 2025/09/20 16:04:55 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/20 17:28:58 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,11 @@ char	**get_dirs(char **envp)
 	if (dirs == NULL)
 		exit_error_message("Failed to get path directories", -1, dirs);
 	return (dirs);
+}
+
+void	execute_program(char **envp, char **cmd_and_args, char *path)
+{
+	execve(path, cmd_and_args, envp);
+	free(path);
+	ft_free_matrix(cmd_and_args);
 }

@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/20 15:22:08 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/20 17:28:26 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,20 +24,20 @@ void	child_process(char **argv, char **envp, int *pipe_fd, char **dirs)
 		error_message(argv[1]);
 	cmd_and_args = ft_split(argv[2], ' ');
 	if (!cmd_and_args)
-		clean_contents(dirs, pipe_fd, 2);
+		clean_contents(dirs, pipe_fd, 2, fd);
 	get_path(dirs, &path, cmd_and_args[0]);
 	ft_free_matrix(dirs);
 	if (!path)
-		clean_contents(cmd_and_args, pipe_fd, 127);
+		clean_contents(cmd_and_args, pipe_fd, 127, fd);
 	dup2(pipe_fd[1], STDOUT_FILENO);
 	if (dup2(fd, STDIN_FILENO) == -1)
 	{
 		free(path);
-		clean_contents(cmd_and_args, pipe_fd, -8);
+		clean_contents(cmd_and_args, pipe_fd, -8, -1);
 	}
 	close_pipe_fd(pipe_fd);
 	close(fd);
-	execve(path, cmd_and_args, envp);
+	execute_program(envp, cmd_and_args, path);
 }
 
 void	scnd_child_process(char **argv, char **envp, int *pipe_fd, char **dirs)
@@ -55,16 +55,16 @@ void	scnd_child_process(char **argv, char **envp, int *pipe_fd, char **dirs)
 	}
 	cmd_and_args = ft_split(argv[3], ' ');
 	if (!cmd_and_args)
-		clean_contents(dirs, pipe_fd, 2);
+		clean_contents(dirs, pipe_fd, 2, fd);
 	get_path(dirs, &path, cmd_and_args[0]);
 	ft_free_matrix(dirs);
 	if (!path)
-		clean_contents(cmd_and_args, pipe_fd, 127);
+		clean_contents(cmd_and_args, pipe_fd, 127, fd);
 	dup2(pipe_fd[0], STDIN_FILENO);
 	dup2(fd, STDOUT_FILENO);
 	close_pipe_fd(pipe_fd);
 	close(fd);
-	execve(path, cmd_and_args, envp);
+	execute_program(envp, cmd_and_args, path);
 }
 
 int	wait_child_process(pid_t child_pid, char *specifier)

@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 03:08:38 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/20 16:05:59 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/20 17:28:11 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,13 @@ typedef struct s_wait
 char	*join_command(char *dir, char *cmd);
 char	**get_dirs(char **envp);
 void	get_path(char **dirs, char **path, char *cmd);
-void	clean_contents(char **matrix, int *pipe_fd, int exit_code);
+void	clean_contents(char **matrix, int *pipe_fd, int exit_code, int fd);
 void	error_message(char *specifier);
 void	exit_error_message(char *message, int error_code, char **dirs);
 void	parse_files(char **argv, int argc);
 void	parse_args(char **argv, int argc);
 int		close_pipe_fd(int *pipe_fd);
 int		return_error_message(char *message, int error_code, char **dirs);
+void	execute_program(char **envp, char **cmd_and_args, char *path);
 
 #endif
