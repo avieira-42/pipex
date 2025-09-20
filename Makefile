@@ -6,28 +6,44 @@
 #    By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/18 20:37:24 by avieira-          #+#    #+#              #
-#    Updated: 2025/09/20 12:07:54 by a-soeiro         ###   ########.fr        #
+#    Updated: 2025/09/20 16:23:41 by avieira-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#NAME= pipex
+NAME= pipex
+
 B_NAME= pipex
+
 CC= cc -g
+
 CFLAGS= -Wall -Wextra -Werror
+
 INCLUDES= ./includes
+
 B_INCLUDES= ./bonus/includes
+
 LIBFT_DIR= ./libs/libft
+
 LIBFT= $(LIBFT_DIR)/libft.a
+
 SRCS_DIR= ./srcs
+
 B_SRCS_DIR= ./bonus/srcs
+
 SRCS= $(SRCS_DIR)/pipex.c \
-$(SRCS_DIR)/pipex_utils.c
+$(SRCS_DIR)/pipex_utils.c \
+$(SRCS_DIR)/pipex_clearing.c \
+$(SRCS_DIR)/pipex_errors.c \
+$(SRCS_DIR)/pipex_parsing.c
+
 B_SRCS= $(B_SRCS_DIR)/pipex_bonus.c \
 $(B_SRCS_DIR)/pipex_utils_bonus.c \
 $(B_SRCS_DIR)/pipe_init_bonus.c \
 $(B_SRCS_DIR)/pipe_list_bonus.c \
+$(B_SRCS_DIR)/here_doc_bonus.c \
 $(B_SRCS_DIR)/pipe_clearing_bonus.c \
-$(B_SRCS_DIR)/here_doc_bonus.c
+$(B_SRCS_DIR)/pipex_parsing_bonus.c \
+$(B_SRCS_DIR)/pipex_fork_utils_bonus.c
 
 all: $(LIBFT) $(NAME)
 

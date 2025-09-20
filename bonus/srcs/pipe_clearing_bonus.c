@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 14:35:40 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/18 20:14:43 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/20 16:12:55 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	error_message(char *specifier)
 	ft_putstr_fd("\n", 2);
 }
 
-void    exit_error_message(char *message, int error_code,
+void	exit_error_message(char *message, int error_code,
 		char **dirs, t_pipe *pipe_list)
 {
 	if (dirs)
@@ -41,7 +41,7 @@ void    exit_error_message(char *message, int error_code,
 	exit(error_code);
 }
 
-void	clean_contents(char **matrix, t_utils util, char **av, int	exit_code)
+void	clean_contents(char **matrix, t_utils util, char **av, int exit_code)
 {
 	if (util.here_doc == TRUE)
 		ft_free_matrix(av);

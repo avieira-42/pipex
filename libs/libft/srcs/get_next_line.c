@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 00:46:29 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/18 01:30:34 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/20 16:18:52 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,11 @@ void	ft_removeline(char *buf)
 {
 	int		i;
 	char	*ptr;
+
 	i = 0;
 	ptr = buf;
-	while (buf[i] != '\n' && buf[i]) i++;
+	while (buf[i] != '\n' && buf[i])
+		i++;
 	ptr += i;
 	if (buf[i] == '\n')
 		ptr++;

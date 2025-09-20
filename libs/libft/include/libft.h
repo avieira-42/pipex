@@ -6,7 +6,7 @@
 /*   By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 19:40:52 by avieira-          #+#    #+#             */
-/*   Updated: 2025/09/17 23:41:19 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/20 16:19:39 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,11 @@ int			ft_printf(const char *format, ...);
 
 /* GET_NEXT_LINE */
 
-int		ft_found_newline(char *line);
-int		ft_nlen(char *str);
-char	*get_next_line(int fd);
-char	*ft_writeline(char *line, char *buf);
-void	ft_removeline(char *buf);
+int			ft_found_newline(char *line);
+int			ft_nlen(char *str);
+char		*get_next_line(int fd);
+char		*ft_writeline(char *line, char *buf);
+void		ft_removeline(char *buf);
 
 /* SORTING */
 

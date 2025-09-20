@@ -6,18 +6,11 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/19 23:03:28 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/20 15:22:08 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
-
-int	close_pipe_fd(int *pipe_fd)
-{
-	close(pipe_fd[0]);
-	close(pipe_fd[1]);
-	return (-1);
-}
 
 void	child_process(char **argv, char **envp, int *pipe_fd, char **dirs)
 {
@@ -100,7 +93,7 @@ int	pipe_commands(char **dirs, char **envp, char **argv)
 
 	if (pipe(pipe_fd) == -1)
 		exit_error_message("Failed to create pipe", -1, dirs);
-	if (access(argv[1], F_OK ) == 0)
+	if (access(argv[1], F_OK) == 0)
 	{
 		child_pid1 = fork();
 		if (child_pid1 == -1)
@@ -114,48 +107,10 @@ int	pipe_commands(char **dirs, char **envp, char **argv)
 	if (child_pid2 == 0)
 		scnd_child_process(argv, envp, pipe_fd, dirs);
 	close_pipe_fd(pipe_fd);
-	if (access(argv[1], F_OK ) == 0)
+	if (access(argv[1], F_OK) == 0)
 		wait_child_process(child_pid1, argv[2]);
 	return (wait_child_process(child_pid2, argv[3]));
 }
-
-void	parse_files(char **argv, int argc)
-{
-	if (access(argv[1], F_OK) == 0
-			&& access(argv[1], R_OK | W_OK | X_OK) == -1)
-	{
-		ft_putstr_fd("pipex_bonus: permission denied: ", 2);
-		ft_putstr_fd(argv[1], 2);
-		ft_putstr_fd("\n", 2);
-	}
-	if (access(argv[1], F_OK) == -1)
-	{
-		ft_putstr_fd("pipex_bonus: no such file or directory: ", 2);
-		ft_putstr_fd(argv[1], 2);
-		ft_putstr_fd("\n", 2);
-	}
-	if (access(argv[argc -1], F_OK) == 0
-			&& access(argv[argc - 1], R_OK | W_OK) == -1)
-	{
-		ft_putstr_fd("pipex_bonus: permission denied: ", 2);
-		ft_putstr_fd(argv[argc - 1], 2);
-		ft_putstr_fd("\n", 2);
-	}
-	if ((access(argv[argc -1], F_OK) == 0
-				&& access(argv[argc - 1], R_OK) == -1))
-		exit(1);
-}
-
-void	parse_args(char **argv, int argc)
-{
-	if (argc != 5)
-	{
-		exit_error_message("Usage: ./pipex <infile> <cmd1> <cmd2> <outfile>",
-				2, NULL);
-	}
-	parse_files(argv, argc);
-}
-
 
 int	main(int argc, char **argv, char **envp)
 {

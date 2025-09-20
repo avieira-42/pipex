@@ -6,7 +6,7 @@
 /*   By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 23:21:19 by avieira-          #+#    #+#             */
-/*   Updated: 2025/09/18 01:25:16 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/20 16:15:35 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ char	*get_user_infile_valid_name(void)
 	char	*invalid_infile;
 
 	valid_infile = ft_strdup(INFILE);
-	//if (valid_infile == NULL)
 	n = 0;
 	while (access(valid_infile, F_OK) == 0)
 	{
@@ -29,7 +28,6 @@ char	*get_user_infile_valid_name(void)
 		invalid_infile = valid_infile;
 		valid_infile = ft_strjoin(INFILE, copy_number);
 		free(invalid_infile);
-		//if (valid_infile == NULL)
 		free(copy_number);
 	}
 	return (valid_infile);
@@ -65,15 +63,15 @@ void	user_input_read(char *limiter, char *user_infile_name)
 	user_input_fd = open(user_infile_name, O_CREAT | O_WRONLY | O_APPEND, 0777);
 	if (user_input_fd == -1)
 		exit_error_message("Failed to create user input file", 3, NULL, NULL);
-	while(1)
+	while (1)
 	{
 		line = get_next_line(STDIN_FILENO);
 		if (line == NULL)
-			break;
+			break ;
 		if (*line == '\0' || ft_bool_strcmp(line, limiter) == TRUE)
 		{
 			free(line);
-			break;
+			break ;
 		}
 		ft_putstr_fd(line, user_input_fd);
 		free(line);

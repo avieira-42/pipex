@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 02:51:49 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/16 22:52:16 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/20 15:34:39 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@ t_pipe	*pipe_list_node_new(void)
 	pipe_node->return_value = pipe(pipe_node->fd);
 	pipe_node->next = NULL;
 	pipe_node->is_closed = FALSE;
+	pipe_node->wait.status = 0;
+	pipe_node->wait.exit_code = 0;
+	pipe_node->wait.pid = 0;
 	return (pipe_node);
 }
 
@@ -58,7 +61,7 @@ t_pipe	*pipe_list_last(t_pipe *pipe_list)
 		last = pipe_list;
 		pipe_list = pipe_list->next;
 	}
-	return last;
+	return (last);
 }
 
 void	pipe_list_add_back(t_pipe *pipe_list, t_pipe *pipe_new)

@@ -3,42 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/19 00:58:01 by a-soeiro         ###   ########.fr       */
+/*   Created: 2025/09/20 15:14:54 by avieira-          #+#    #+#             */
+/*   Updated: 2025/09/20 16:04:55 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
-
-void	error_message(char *specifier)
-{
-	ft_putstr_fd("pipex_bonus: ", 2);
-	ft_putstr_fd("file not found: ", 2);
-	ft_putstr_fd(specifier, 2);
-	ft_putstr_fd("\n", 2);
-}
-
-void	exit_error_message(char *message, int error_code, char **dirs)
-{
-	if (dirs)
-		ft_free_matrix(dirs);
-	ft_putstr_fd("Error\n", 2);
-	ft_putstr_fd(message, 2);
-	ft_putstr_fd("\n", 2);
-	exit(error_code);
-}
-
-int	return_error_message(char *message, int error_code, char **dirs)
-{
-	if (dirs)
-		ft_free_matrix(dirs);
-	ft_putstr_fd("Error\n", 2);
-	ft_putstr_fd(message, 2);
-	ft_putstr_fd("\n", 2);
-	return (error_code);
-}
 
 char	*join_command(char *dir, char *cmd)
 {
@@ -95,13 +67,4 @@ char	**get_dirs(char **envp)
 	if (dirs == NULL)
 		exit_error_message("Failed to get path directories", -1, dirs);
 	return (dirs);
-}
-
-void	clean_contents(char **matrix, int *pipe_fd, int exit_code)
-{
-	if (matrix)
-		ft_free_matrix(matrix);
-	close(pipe_fd[0]);
-	close(pipe_fd[1]);
-	exit(exit_code);
 }
