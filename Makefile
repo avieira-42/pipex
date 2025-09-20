@@ -6,12 +6,12 @@
 #    By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/18 20:37:24 by avieira-          #+#    #+#              #
-#    Updated: 2025/09/18 20:43:52 by avieira-         ###   ########.fr        #
+#    Updated: 2025/09/20 12:07:54 by a-soeiro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME= pipex
-B_NAME= pipex_bonus
+#NAME= pipex
+B_NAME= pipex
 CC= cc -g
 CFLAGS= -Wall -Wextra -Werror
 INCLUDES= ./includes

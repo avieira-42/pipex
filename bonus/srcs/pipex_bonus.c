@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/18 21:52:27 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/19 23:22:43 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	wait_child_process(pid_t child_pid, char *specifier)
 	exit_code = 0;
 	wait.pid = waitpid(child_pid, &wait.status, 0);
 	exit_code = (WEXITSTATUS(wait.status));
-	if (exit_code == 127 || exit_code == -8)
+	if (exit_code == 127)
 	{
 		ft_putstr_fd("pipex_bonus: ", 2);
 		ft_putstr_fd("command not found: ", 2);
@@ -38,8 +38,6 @@ void	frst_chld_proc(t_args param, t_pipe *pipe_node, t_utils utils)
 	path = NULL;
 	utils.pipe_node = pipe_node;
 	utils.fd = open(param.argv[1], O_RDONLY, 0777);
-	if (utils.fd == -1)
-		error_message(param.argv[1]);
 	cmd_and_args = ft_split(param.argv[2], ' ');
 	if (!cmd_and_args)
 		clean_contents(NULL, utils, param.argv, -2);
@@ -51,7 +49,7 @@ void	frst_chld_proc(t_args param, t_pipe *pipe_node, t_utils utils)
 	if (dup2(utils.fd, STDIN_FILENO) == -1)
 	{
 		free(path);
-		clean_contents(cmd_and_args, utils, param.argv, -8);
+		clean_contents(cmd_and_args, utils, param.argv, 1);
 	}
 	pipe_list_free(pipe_node);
 	close(utils.fd);
@@ -90,8 +88,8 @@ void	fi_chld_pro(t_args arg, t_pipe *pipe_lst, t_utils util, int n)
 		util.fd = open(arg.argv[n + 1], O_CREAT | O_RDWR | O_APPEND, 0777);
 	else
 		util.fd = open(arg.argv[n + 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	if (util.fd == -1)
-		clean_contents(util.dirs, util, arg.argv, -10);
+	/*if (util.fd == -1)
+		clean_contents(util.dirs, util, arg.argv, 2);*/
 	cmd_and_args = ft_split(arg.argv[n], ' ');
 	if (!cmd_and_args)
 		clean_contents(util.dirs, util, arg.argv, -2);
@@ -100,7 +98,11 @@ void	fi_chld_pro(t_args arg, t_pipe *pipe_lst, t_utils util, int n)
 	if (!path)
 		clean_contents(cmd_and_args, util, arg.argv, 127);
 	dup2(pipe_lst->fd[0], STDIN_FILENO);
-	dup2(util.fd, STDOUT_FILENO);
+	if (dup2(util.fd, STDOUT_FILENO) == -1)
+	{
+		free(path);
+		clean_contents(cmd_and_args, util, arg.argv, 1);
+	}
 	pipe_list_free(pipe_lst);
 	close(util.fd);
 	execve(path, cmd_and_args, arg.envp);
@@ -133,11 +135,14 @@ int	pip_cmd(t_args param, t_pipe *pipe_lst, t_utils utils)
 	char	**dirs;
 
 	dirs = utils.dirs;
-	child_pid_1 = fork();
-	if (child_pid_1 == -1)
-		exit_error_message("Failed to create first child", -1, dirs, pipe_lst);
-	if (child_pid_1 == 0)
-		frst_chld_proc(param, pipe_lst, utils);
+	if (access(param.argv[1], F_OK) == 0)
+	{
+		child_pid_1 = fork();
+		if (child_pid_1 == -1)
+			exit_error_message("Failed to create first child", -1, dirs, pipe_lst);
+		if (child_pid_1 == 0)
+			frst_chld_proc(param, pipe_lst, utils);
+	}
 	pipe_lst = loop_middle_child(param, pipe_lst, utils);
 	child_pid_last = fork();
 	if (child_pid_last == -1)
@@ -145,43 +150,55 @@ int	pip_cmd(t_args param, t_pipe *pipe_lst, t_utils utils)
 	if (child_pid_last == 0)
 		fi_chld_pro(param, pipe_lst, utils, param.argc - 2);
 	close_pipe_fd(pipe_lst);
-	wait_child_process(child_pid_1, param.argv[1]);
+	if (access(param.argv[1], F_OK) == 0)
+		wait_child_process(child_pid_1, param.argv[1]);
 	return (wait_child_process(child_pid_last, param.argv[param.argc - 2]));
+}
+
+void	parse_files_exit(char **argv, int argc)
+{
+	if ((access(argv[argc -1], F_OK) == 0
+				&& access(argv[argc - 1], R_OK | W_OK) == -1))
+		exit(1);
 }
 
 void	parse_files(char **argv, int argc, t_bool here_doc)
 {
-	if (access(argv[argc -1], F_OK) == 0
-		&& access(argv[argc - 1], R_OK | W_OK) == -1)
+	if (access(argv[1], F_OK) == 0 && here_doc == FALSE
+			&& access(argv[1], R_OK | W_OK) == -1)
 	{
-		ft_putstr_fd("pipex_bonus: ", 2);
-		ft_putstr_fd("permission denied: ", 2);
-		ft_putstr_fd(argv[argc - 1], 2);
-		ft_putstr_fd("\n", 2);
-	}
-	if (access(argv[1], R_OK | W_OK | X_OK) == -1 && here_doc == FALSE)
-	{
-		ft_putstr_fd("pipex_bonus: ", 2);
-		ft_putstr_fd("permission denied: ", 2);
+		ft_putstr_fd("pipex_bonus: permission denied: ", 2);
 		ft_putstr_fd(argv[1], 2);
 		ft_putstr_fd("\n", 2);
 	}
-	if ((access(argv[argc -1], F_OK) == 0
-		&& access(argv[argc - 1], R_OK) == -1)
-	|| (access(argv[1], R_OK | W_OK | X_OK) == -1 && here_doc == FALSE))
-		exit(1);
+	if (access(argv[1], F_OK) == -1 && here_doc == FALSE)
+	{
+		ft_putstr_fd("pipex_bonus: no such file or directory: ", 2);
+		ft_putstr_fd(argv[1], 2);
+		ft_putstr_fd("\n", 2);
+	}
+	if ((access(argv[argc -1], F_OK) == 0)
+			&& access(argv[argc - 1], R_OK | W_OK) == -1)
+	{
+		ft_putstr_fd("pipex_bonus: permission denied: ", 2);
+		ft_putstr_fd(argv[argc - 1], 2);
+		ft_putstr_fd("\n", 2);
+	}
+	//parse_files_exit(argv, argc);
 }
 
-void	parse_args(char **argv, int argc, t_bool here_doc)
+void	parse_args(char **argv, int argc, t_bool *here_doc)
 {
-	if (argc < 5 || (argc < 6 && here_doc == TRUE))
+	if (argc > 4)
+		*here_doc = ft_bool_strcmp("here_doc", argv[1]);
+	if (argc < 5 || (argc < 6 && *here_doc == TRUE))
 	{
 		ft_putstr_fd("Usage: ./pipex <infile> <cmd1> ... <cmdn> <outfile>", 2);
 		ft_putstr_fd("\nOR\n", 2);
 		exit_error_message("./pipex here_doc <limiter> <cmd1> <cmd2> <file>\n",
 				-1, NULL, NULL);
 	}
-	parse_files(argv, argc, here_doc);
+	parse_files(argv, argc, *here_doc);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -192,8 +209,7 @@ int	main(int argc, char **argv, char **envp)
 	t_args		parameter;
 	t_utils		utils;
 
-	here_doc = ft_bool_strcmp("here_doc", argv[1]);
-	parse_args(argv, argc, here_doc);
+	parse_args(argv, argc, &here_doc);
 	if (here_doc == TRUE)
 		here_doc_setup(&argc, &argv);
 	if (argv == NULL)

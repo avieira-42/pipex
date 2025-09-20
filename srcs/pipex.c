@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/19 01:05:23 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/19 23:03:28 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,10 @@ void	scnd_child_process(char **argv, char **envp, int *pipe_fd, char **dirs)
 	path = NULL;
 	fd = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (fd == -1)
+	{
+		ft_free_matrix(dirs);
 		exit(1);
+	}
 	cmd_and_args = ft_split(argv[3], ' ');
 	if (!cmd_and_args)
 		clean_contents(dirs, pipe_fd, 2);
@@ -97,18 +100,22 @@ int	pipe_commands(char **dirs, char **envp, char **argv)
 
 	if (pipe(pipe_fd) == -1)
 		exit_error_message("Failed to create pipe", -1, dirs);
-	child_pid1 = fork();
-	if (child_pid1 == -1)
-		exit_error_message("Failed to fork", -1, dirs);
-	if (child_pid1 == 0)
-		child_process(argv, envp, pipe_fd, dirs);
+	if (access(argv[1], F_OK ) == 0)
+	{
+		child_pid1 = fork();
+		if (child_pid1 == -1)
+			exit_error_message("Failed to fork", -1, dirs);
+		if (child_pid1 == 0)
+			child_process(argv, envp, pipe_fd, dirs);
+	}
 	child_pid2 = fork();
 	if (child_pid2 == -1)
 		exit_error_message("Failed to fork", -1, dirs);
 	if (child_pid2 == 0)
 		scnd_child_process(argv, envp, pipe_fd, dirs);
 	close_pipe_fd(pipe_fd);
-	wait_child_process(child_pid1, argv[2]);
+	if (access(argv[1], F_OK ) == 0)
+		wait_child_process(child_pid1, argv[2]);
 	return (wait_child_process(child_pid2, argv[3]));
 }
 
@@ -135,18 +142,16 @@ void	parse_files(char **argv, int argc)
 		ft_putstr_fd("\n", 2);
 	}
 	if ((access(argv[argc -1], F_OK) == 0
-		&& access(argv[argc - 1], R_OK) == -1)
-	|| (access(argv[1], R_OK | W_OK | X_OK) == -1)
-	|| (access(argv[argc -1], F_OK) == -1))
+				&& access(argv[argc - 1], R_OK) == -1))
 		exit(1);
 }
 
 void	parse_args(char **argv, int argc)
 {
-	if (argc < 5)
+	if (argc != 5)
 	{
 		exit_error_message("Usage: ./pipex <infile> <cmd1> <cmd2> <outfile>",
-			   	2, NULL);
+				2, NULL);
 	}
 	parse_files(argv, argc);
 }
