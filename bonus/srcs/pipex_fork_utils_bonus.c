@@ -6,7 +6,7 @@
 /*   By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:32:40 by avieira-          #+#    #+#             */
-/*   Updated: 2025/09/20 17:37:59 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/21 18:51:31 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	wait_child_process(pid_t child_pid, char *specifier)
 	t_wait	wait;
 
 	exit_code = 0;
+	wait.status = 0;
 	wait.pid = waitpid(child_pid, &wait.status, 0);
 	exit_code = (WEXITSTATUS(wait.status));
 	if (exit_code == 127)
@@ -48,7 +49,7 @@ void	mid_chld_pro(t_args param, t_pipe *pipe_lst, t_utils utils, int n)
 	if (dup2(pipe_lst->next->fd[1], STDOUT_FILENO) == -1)
 		clean_contents(cmd_and_args, utils, param.argv, -2);
 	pipe_list_free(pipe_lst);
-	execve(path, cmd_and_args, param.envp);
+	execute_program(param.envp, cmd_and_args, path, utils);
 }
 
 t_pipe	*loop_middle_child(t_args param, t_pipe *pipe_list, t_utils util)

@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/20 17:28:26 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/21 18:50:56 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ int	wait_child_process(pid_t child_pid, char *specifier)
 	t_wait	wait;
 
 	exit_code = 0;
+	wait.status = 0;
 	wait.pid = waitpid(child_pid, &wait.status, 0);
 	exit_code = (WEXITSTATUS(wait.status));
 	if (exit_code == 127 || exit_code == -8)

@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/20 18:09:38 by a-soeiro         ###   ########.fr       */
+/*   Updated: 2025/09/21 14:46:37 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,13 @@ char	**get_dirs(char **envp)
 	return (dirs);
 }
 
-void	execute_program(char **envp, char **cmd_and_args, char *path)
+void	execute_program(char **envp, char **cmd_and_args, char *path,
+		t_utils utils)
 {
 	execve(path, cmd_and_args, envp);
 	free(path);
 	ft_free_matrix(cmd_and_args);
+	if (utils.here_doc == TRUE)
+		ft_free_matrix(utils.argv);
 	exit(1);
 }

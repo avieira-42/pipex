@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/20 17:42:28 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/21 14:52:44 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	frst_chld_proc(t_args param, t_pipe *pipe_node, t_utils utils)
 	}
 	pipe_list_free(pipe_node);
 	close(utils.fd);
-	execute_program(param.envp, cmd_and_args, path);
+	execute_program(param.envp, cmd_and_args, path, utils);
 }
 
 void	fi_chld_pro(t_args arg, t_pipe *pipe_lst, t_utils util, int n)
@@ -64,7 +64,7 @@ void	fi_chld_pro(t_args arg, t_pipe *pipe_lst, t_utils util, int n)
 	}
 	pipe_list_free(pipe_lst);
 	close(util.fd);
-	execute_program(arg.envp, cmd_and_args, path);
+	execute_program(arg.envp, cmd_and_args, path, util);
 }
 
 int	pip_cmd(t_args args, t_pipe *pipe_lst, t_utils utils)
@@ -110,6 +110,7 @@ int	main(int argc, char **argv, char **envp)
 	if (argv == NULL)
 		return (2);
 	parameter_init(argc, argv, envp, &parameter);
+	utils.argv = argv;
 	dirs = get_dirs(envp);
 	if (dirs == NULL)
 		return (3);

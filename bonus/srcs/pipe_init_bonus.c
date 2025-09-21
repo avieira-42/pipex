@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 03:32:42 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/18 16:04:25 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/21 14:44:00 by avieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,4 +25,5 @@ void	utils_init(t_utils *utils, char **dirs, t_bool here_doc)
 	utils->here_doc = here_doc;
 	utils->dirs = dirs;
 	utils->pipe_node = NULL;
+	utils->argv = NULL;
 }
