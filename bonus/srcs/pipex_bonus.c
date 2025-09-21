@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/21 14:52:44 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/22 00:22:43 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,11 +110,10 @@ int	main(int argc, char **argv, char **envp)
 	if (argv == NULL)
 		return (2);
 	parameter_init(argc, argv, envp, &parameter);
-	utils.argv = argv;
 	dirs = get_dirs(envp);
 	if (dirs == NULL)
 		return (3);
-	utils_init(&utils, dirs, here_doc);
+	utils_init(&utils, dirs, here_doc, argv);
 	pipe_list = pipe_list_create(argc);
 	exit_last(utils, pipe_list, argv, pip_cmd(parameter, pipe_list, utils));
 }

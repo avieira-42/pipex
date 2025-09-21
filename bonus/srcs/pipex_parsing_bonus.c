@@ -6,7 +6,7 @@
 /*   By: avieira- <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:27:45 by avieira-          #+#    #+#             */
-/*   Updated: 2025/09/20 16:12:19 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/22 00:32:39 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,9 @@ void	parse_args(char **argv, int argc, t_bool *here_doc)
 	{
 		ft_putstr_fd("Usage: ./pipex <infile> <cmd1> ... <cmdn> <outfile>", 2);
 		ft_putstr_fd("\nOR\n", 2);
-		exit_error_message("./pipex here_doc <limiter> <cmd1> <cmd2> <file>\n",
-			-1, NULL, NULL);
+		ft_putstr_fd("./pipex here_doc <limiter> <cmd1> ... <cmdn> <file>", 2);
+		ft_putstr_fd("\n", 2);
+		exit(1);
 	}
 	parse_files(argv, argc, *here_doc);
 }

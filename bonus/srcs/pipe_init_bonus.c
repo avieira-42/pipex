@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 03:32:42 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/21 14:44:00 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/22 00:25:03 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ void	parameter_init(int argc, char **argv, char **envp, t_args *param)
 	param->envp = envp;
 }
 
-void	utils_init(t_utils *utils, char **dirs, t_bool here_doc)
+void	utils_init(t_utils *utils, char **dirs, t_bool here_doc, char **argv)
 {
 	utils->fd = 0;
 	utils->here_doc = here_doc;
 	utils->dirs = dirs;
 	utils->pipe_node = NULL;
-	utils->argv = NULL;
+	utils->argv = argv;
 }

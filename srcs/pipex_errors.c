@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 20:31:31 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/20 15:18:58 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/22 00:27:40 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	error_message(char *specifier)
 {
-	ft_putstr_fd("pipex_bonus: ", 2);
+	ft_putstr_fd("pipex: ", 2);
 	ft_putstr_fd("file not found: ", 2);
 	ft_putstr_fd(specifier, 2);
 	ft_putstr_fd("\n", 2);

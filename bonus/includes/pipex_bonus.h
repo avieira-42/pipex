@@ -6,7 +6,7 @@
 /*   By: a-soeiro <avieira-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 18:39:35 by a-soeiro          #+#    #+#             */
-/*   Updated: 2025/09/21 14:51:40 by avieira-         ###   ########.fr       */
+/*   Updated: 2025/09/22 00:26:08 by a-soeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	exit_error_message(char *message, int error_code,
 			char **dirs, t_pipe *pipe_list);
 
 // pipe_init_bonus.c
-void	utils_init(t_utils *utils, char **dirs, t_bool here_doc);
+void	utils_init(t_utils *utils, char **dirs, t_bool here_doc, char **argv);
 void	parameter_init(int argc, char **argv, char **envp, t_args *param);
 
 // pipe-list_bonus.c
@@ -89,7 +89,7 @@ char	*join_command(char *dir, char *cmd);
 void	get_path(char **dirs, char **path, char *cmd);
 char	**get_dirs(char **envp);
 void	execute_program(char **envp, char **cmd_and_args, char *path,
-		t_utils utils);
+			t_utils utils);
 
 // here_doc_bonus.c
 void	here_doc_setup(int *argc, char ***argv);
